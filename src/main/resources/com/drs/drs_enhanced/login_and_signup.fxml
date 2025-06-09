@@ -2,6 +2,7 @@
 
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
 <?import javafx.scene.control.PasswordField?>
 <?import javafx.scene.control.Tab?>
 <?import javafx.scene.control.TabPane?>
@@ -45,7 +46,7 @@
                      </effect></AnchorPane>
             </content>
           </Tab>
-          <Tab text="Register - Public User">
+          <Tab text="Register-Public">
             <content>
               <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="263.0" prefWidth="256.0">
                      <children>
@@ -66,6 +67,27 @@
                      </effect></AnchorPane>
             </content>
           </Tab>
+            <Tab text="Register-Other Dept">
+              <content>
+                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                     <children>
+                        <Label layoutX="6.0" layoutY="14.0" text="Department Name" />
+                        <TextField fx:id="register_department_name" layoutX="7.0" layoutY="31.0" prefHeight="25.0" prefWidth="269.0" promptText="Enter the Department Name" />
+                        <Label layoutX="7.0" layoutY="64.0" text="Department Email" />
+                        <TextField fx:id="register_department_email" layoutX="8.0" layoutY="81.0" prefHeight="25.0" prefWidth="269.0" promptText="Enter the Department Email" />
+                        <Label layoutX="8.0" layoutY="114.0" text="Set Password" />
+                        <Text fx:id="department_register_alert_message" fill="#c61010" layoutX="6.0" layoutY="189.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Text" textAlignment="CENTER" wrappingWidth="268.5">
+                           <font>
+                              <Font name="System Bold" size="13.0" />
+                           </font>
+                        </Text>
+                        <Button fx:id="register_department_button" layoutX="60.0" layoutY="220.0" mnemonicParsing="false" onAction="#registerUser" text="Register Other Department" />
+                        <Text layoutX="9.0" layoutY="276.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Together, we respond stronger. Register your department and be part of the difference." textAlignment="CENTER" wrappingWidth="268.5" />
+                        <PasswordField fx:id="register_department_password" layoutX="7.0" layoutY="131.0" prefHeight="25.0" prefWidth="269.0" promptText="Enter the Password" />
+                     </children>
+                  </AnchorPane>
+              </content>
+            </Tab>
         </tabs>
       </TabPane>
    </children>
