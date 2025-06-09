@@ -4,9 +4,8 @@ public enum UserType {
     PUBLIC_USER("Public User"), 
     GUEST_USER("Guest User"), 
     RESPONDER("Responder"), 
-    OTHER_DEPARTMENT("Fire Station"), 
-    OTHER_DEPARTMENT_2("Mobile Hospital"), 
-    OTHER_DEPARTMENT_3("Rescue Team");
+    OTHER_DEPARTMENT("Other Department");
+
     
     private final String displayName;
 

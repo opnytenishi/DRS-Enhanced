@@ -25,7 +25,7 @@ import java.io.Serializable;
     query = "SELECT user FROM User user WHERE user.email = :email AND user.password = :password"
     )
 })
-public abstract class User implements Serializable {
+public class User implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
@@ -43,19 +43,15 @@ public abstract class User implements Serializable {
     private String password;
     
     @Column(nullable = false)
-    private String userType;
-    
-    @Column(nullable = false)
     private String region;
 
     public User() {
     }
 
-    public User(String name, String email, String password, String userType, String region) {
+    public User(String name, String email, String password, String region) {
         this.name = name;
         this.email = email;
         this.password = password;
-        this.userType = userType;
         this.region = region;
     }
 
@@ -91,14 +87,6 @@ public abstract class User implements Serializable {
         this.password = password;
     }
 
-    public String getUserType() {
-        return userType;
-    }
-
-    public void setUserType(String userType) {
-        this.userType = userType;
-    }
-
     public String getRegion() {
         return region;
     }
@@ -110,8 +98,7 @@ public abstract class User implements Serializable {
     @Override
     public String toString() {
         return "User{" + "userId=" + userId + ", name=" + name + ", email=" + 
-                email + ", password=" + password + ", userType=" + userType + 
-                ", region=" + region + '}';
+                email + ", password=" + password + ", region=" + region + '}';
     }
  
 }

@@ -10,8 +10,8 @@ public class PublicUser extends User{
     public PublicUser() {
     }
 
-    public PublicUser(String name, String email, String password, String userType, String region) {
-        super(name, email, password, userType, region);
+    public PublicUser(String name, String email, String password, String region) {
+        super(name, email, password, region);
     }
     
 }

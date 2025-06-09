@@ -22,7 +22,7 @@
             <Image url="@images/output.jpg" />
          </image>
       </ImageView>
-      <TabPane layoutX="300.0" layoutY="20.0" prefHeight="358.0" prefWidth="286.0" tabClosingPolicy="UNAVAILABLE">
+      <TabPane fx:id="tabPane" layoutX="300.0" layoutY="20.0" prefHeight="358.0" prefWidth="286.0" tabClosingPolicy="UNAVAILABLE">
         <tabs>
           <Tab text="Login">
             <content>
@@ -60,7 +60,10 @@
                         <TextField fx:id="register_user_email" layoutX="8.0" layoutY="71.0" prefHeight="25.0" prefWidth="269.0" promptText="Enter Your Email " />
                         <TextField fx:id="register_user_name" layoutX="8.0" layoutY="26.0" prefHeight="25.0" prefWidth="269.0" promptText="Enter Your Full Name" />
                         <PasswordField fx:id="register_user_password" layoutX="9.0" layoutY="115.0" prefHeight="25.0" prefWidth="269.0" promptText="Enter Your Password" />
-                        <Text fx:id="register_public_user_alert_message" layoutX="12.0" layoutY="298.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Alert Message" textAlignment="CENTER" wrappingWidth="268.5" />
+                        <Text fx:id="register_public_user_alert_message" fill="#b20000" layoutX="12.0" layoutY="298.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Alert Message" textAlignment="CENTER" wrappingWidth="268.5">
+                           <font>
+                              <Font name="System Bold" size="13.0" />
+                           </font></Text>
                      </children>
                      <effect>
                         <InnerShadow height="9.14" radius="4.07" width="9.14" />
@@ -81,7 +84,7 @@
                               <Font name="System Bold" size="13.0" />
                            </font>
                         </Text>
-                        <Button fx:id="register_department_button" layoutX="60.0" layoutY="220.0" mnemonicParsing="false" onAction="#registerUser" text="Register Other Department" />
+                        <Button fx:id="register_department_button" layoutX="60.0" layoutY="220.0" mnemonicParsing="false" onAction="#registerOtherDepartmentUser" text="Register Other Department" />
                         <Text layoutX="9.0" layoutY="276.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Together, we respond stronger. Register your department and be part of the difference." textAlignment="CENTER" wrappingWidth="268.5" />
                         <PasswordField fx:id="register_department_password" layoutX="7.0" layoutY="131.0" prefHeight="25.0" prefWidth="269.0" promptText="Enter the Password" />
                      </children>
