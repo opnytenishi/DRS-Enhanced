@@ -137,7 +137,8 @@ public class Login_and_signup_Controller implements Initializable {
         }
 
         if (fxmlFile != null) {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource(fxmlFile));
+            FXMLLoader loader = new FXMLLoader(
+                    getClass().getResource("/com/drs/drs_enhanced/" + fxmlFile));
             Parent root = loader.load();
 
             Stage stage = (Stage) user_login_button.getScene().getWindow();

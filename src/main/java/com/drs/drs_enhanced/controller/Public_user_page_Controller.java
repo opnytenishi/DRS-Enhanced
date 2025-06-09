@@ -126,7 +126,8 @@ public class Public_user_page_Controller implements Initializable {
 
     @FXML
     private void handleFakeLogoutFrom_public_user(ActionEvent event) throws IOException {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("login_and_signup.fxml"));
+        FXMLLoader loader = new FXMLLoader(getClass()
+                .getResource("/com/drs/drs_enhanced/login_and_signup.fxml"));
         Parent root = loader.load();
 
         // Get current stage

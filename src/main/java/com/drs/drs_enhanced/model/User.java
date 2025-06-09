@@ -1,20 +1,42 @@
 package com.drs.drs_enhanced.model;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Inheritance;
+import jakarta.persistence.InheritanceType;
 import jakarta.persistence.Table;
 
 @Entity
 @Table(name = "users")
-public class User {
+@Inheritance(strategy = InheritanceType.JOINED)
+public abstract class User {
 
-    protected String userId;
-    protected String name;
-    protected String email;
-    protected String password;
-    protected String userType;
-    protected String region;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long userId;
 
-    public User(String userId, String name, String email, String password, String userType, String region) {
+    @Column(nullable = false)
+    private String name;
+    
+    @Column(nullable = false, unique = true)
+    private String email;
+    
+    @Column(nullable = false)
+    private String password;
+    
+    @Column(nullable = false)
+    private String userType;
+    
+    @Column(nullable = false)
+    private String region;
+
+    public User() {
+    }
+
+    public User(Long userId, String name, String email, String password, String userType, String region) {
         this.userId = userId;
         this.name = name;
         this.email = email;
@@ -23,11 +45,11 @@ public class User {
         this.region = region;
     }
 
-    public String getUserId() {
+    public Long getUserId() {
         return userId;
     }
 
-    public void setUserId(String userId) {
+    public void setUserId(Long userId) {
         this.userId = userId;
     }
 
@@ -73,7 +95,9 @@ public class User {
 
     @Override
     public String toString() {
-        return "User [userId=" + userId + ", name=" + name + ", email=" + email + ", userType=" + userType + ", Region=" + region + "]";
+        return "User{" + "userId=" + userId + ", name=" + name + ", email=" + 
+                email + ", password=" + password + ", userType=" + userType + 
+                ", region=" + region + '}';
     }
-
+ 
 }

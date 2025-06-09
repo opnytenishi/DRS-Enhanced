@@ -1,43 +1,56 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package com.drs.drs_enhanced.model;
 
+import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.Table;
-import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@Table(name = "otherDepartments")
-public class Department extends User {
+@Table(name = "departments")
+public class Department extends User{
 
     private String departmentName;
-    private List<String> assignedTasks;
-    private List<String> resources;
+    
+    @ManyToMany
+    @JoinTable(
+        name = "department_supply",
+        joinColumns = @JoinColumn(name = "department_id"),
+        inverseJoinColumns = @JoinColumn(name = "supply_id")
+    )
+    private List<Supply> supplies;
+    
+    public Department() {
+    }
 
-    public Department(String userId, String name, String email, String password, String departmentName, String assignedRegion) {
-        super(userId, name, email, password, "OtherDepartment", assignedRegion);
+    public Department(String departmentName, List<Supply> supplies, Long userId, String name, String email, String password, String userType, String region) {
+        super(userId, name, email, password, userType, region);
         this.departmentName = departmentName;
-        this.assignedTasks = new ArrayList<>();
-        this.resources = new ArrayList<>();
+        this.supplies = supplies;
     }
 
     public String getDepartmentName() {
         return departmentName;
     }
 
-    public void assignTask(String task) {
-        assignedTasks.add(task);
+    public void setDepartmentName(String departmentName) {
+        this.departmentName = departmentName;
     }
 
-    public void addResource(String resource) {
-        resources.add(resource);
+    public List<Supply> getSupplies() {
+        return supplies;
+    }
+
+    public void setSupplies(List<Supply> supplies) {
+        this.supplies = supplies;
     }
 
     @Override
     public String toString() {
-        return "OtherDepartment [departmentName=" + departmentName + ", tasks=" + assignedTasks + ", resources=" + resources + "]";
+        return "Department{" + "departmentName=" + departmentName + 
+                ", supplies=" + supplies + '}';
     }
+    
 }

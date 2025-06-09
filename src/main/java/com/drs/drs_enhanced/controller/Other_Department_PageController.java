@@ -62,7 +62,8 @@ public class Other_Department_PageController implements Initializable {
 
     @FXML
     private void handleFakeLogoutFrom_department(ActionEvent event) throws IOException {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("login_and_signup.fxml"));
+        FXMLLoader loader = new FXMLLoader(getClass()
+                .getResource("/com/drs/drs_enhanced/login_and_signup.fxml"));
         Parent root = loader.load();
 
         Stage stage = (Stage) department_logout_button.getScene().getWindow();
