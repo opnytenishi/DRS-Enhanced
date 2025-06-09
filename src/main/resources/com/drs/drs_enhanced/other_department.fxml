@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.net.URL?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
+
+<AnchorPane prefHeight="400.0" prefWidth="600.0" styleClass="mainFxmlClass" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.drs.drs_enhanced.controller.Other_Department_PageController">
+
+    <stylesheets>
+        <URL value="@other_department_page.css" />
+    </stylesheets>
+
+    <children>
+        <!-- Logo -->
+        <ImageView fitHeight="62.0" fitWidth="122.0" layoutX="6.0" layoutY="6.0" pickOnBounds="true" preserveRatio="true">
+            <image>
+                <Image url="@images/drs_other_department.jpeg" />
+            </image>
+        </ImageView>
+
+        <!-- Title -->
+        <Text fx:id="department_name" layoutX="135.0" layoutY="35.0" text="Other Department Dashboard" textAlignment="CENTER">
+            <font>
+                <Font size="26.0" />
+            </font>
+        </Text>
+
+        <!-- Logout Button -->
+        <Button fx:id="department_logout_button" layoutX="137.0" layoutY="50.0" onAction="#handleFakeLogoutFrom_department" text="Log-out" />
+
+        <!-- Status Message -->
+        <Text fx:id="department_status_message" fill="#1ab02f" layoutX="336.0" layoutY="68.0" text="Status Messages" textAlignment="CENTER" wrappingWidth="250.0">
+            <font>
+                <Font size="14.0" />
+            </font>
+        </Text>
+
+        <!-- Assigned Task -->
+        <Label layoutX="20.0" layoutY="85.0" text="Assigned Task:" />
+        <TextArea fx:id="assigned_task_textarea" editable="false" layoutX="20.0" layoutY="105.0" prefHeight="60.0" prefWidth="560.0" wrapText="true" />
+
+        <!-- Incident Details -->
+        <Label layoutX="20.0" layoutY="175.0" text="Incident Details:" />
+        <TextArea fx:id="incident_details_textarea" editable="false" layoutX="20.0" layoutY="195.0" prefHeight="60.0" prefWidth="560.0" wrapText="true" />
+
+        <!-- Supplies Details -->
+        <Label layoutX="20.0" layoutY="265.0" text="Supplies Details:" />
+        <TextArea fx:id="supplies_details_textarea" editable="false" layoutX="20.0" layoutY="285.0" prefHeight="60.0" prefWidth="560.0" wrapText="true" />
+
+        <!-- Mark as Completed Button -->
+        <Button fx:id="mark_as_completed_button" layoutX="450.0" layoutY="355.0" onAction="#handleMarkAsCompleted" text="Mark as Completed" />
+    </children>
+</AnchorPane>

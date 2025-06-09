@@ -39,7 +39,6 @@
             <artifactId>jakarta.persistence</artifactId>
             <version>2.2.3</version>
         </dependency>
-        
     </dependencies>
     <build>
         <plugins>
@@ -57,6 +56,9 @@
                 <version>0.0.4</version>
                 <configuration>
                     <mainClass>com.drs.drs_enhanced.App</mainClass>
+                    <options>
+                        <option>--add-modules=javafx.controls,javafx.fxml,java.instrument</option>
+                    </options>
                 </configuration>
                 <executions>
                     <execution>

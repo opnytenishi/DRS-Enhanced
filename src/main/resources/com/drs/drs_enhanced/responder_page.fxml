@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.net.URL?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.control.Tab?>
+<?import javafx.scene.control.TabPane?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
+
+<AnchorPane prefHeight="400.0" prefWidth="600.0" styleClass="mainFxmlClass" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.drs.drs_enhanced.controller.Responder_page_Controller">
+    <stylesheets>
+        <URL value="@responder_page.css" />
+    </stylesheets>
+    <children>
+        <!-- Logo -->
+        <ImageView fitHeight="62.0" fitWidth="122.0" layoutX="6.0" layoutY="6.0" pickOnBounds="true" preserveRatio="true">
+            <image>
+                <Image url="@images/drs_responders.jpeg" />
+            </image>
+        </ImageView>
+
+        <!-- Title and Logout -->
+        <Text layoutX="126.0" layoutY="31.0" text="Responders Portal" textAlignment="CENTER">
+            <font>
+                <Font size="27.0" />
+            </font>
+        </Text>
+        <Button fx:id="responder_logout_button" layoutX="127.0" layoutY="45.0" onAction="#handleFakeLogoutFrom_responder" text="Log-out" />
+        <Text fx:id="success_or_error_status" fill="#1ab02f" layoutX="341.0" layoutY="42.0" text="Alert Messages" textAlignment="CENTER" wrappingWidth="244.5556640625">
+            <font>
+                <Font size="14.0" />
+            </font>
+        </Text>
+
+        <!-- Main Tabs -->
+        <TabPane layoutY="79.0" prefHeight="322.0" prefWidth="600.0" tabClosingPolicy="UNAVAILABLE">
+            <tabs>
+                <!-- Tab 1: Support and Prioritizing -->
+                <Tab text="Support and Prioritizing">
+                  <content>
+                    <AnchorPane prefHeight="322.0" prefWidth="600.0">
+                      <children>
+                        <Label layoutX="258.0" layoutY="6.0" text="Select Incident" />
+
+                        <Label layoutX="40.0" layoutY="246.0" text="Assign Team:" />
+                        <ComboBox fx:id="assign_teamComboBox" layoutX="140.0" layoutY="241.0" onAction="#handleAssignTeamToIncident" prefWidth="300.0" promptText="Select team" />
+
+                        <Button fx:id="assign_team_proceedButton" layoutX="460.0" layoutY="241.0" onAction="#handleAssignTeamToIncident" prefWidth="100.0" text="Proceed" />
+                        <ListView fx:id="incidentList_for_assign_team" layoutX="8.0" layoutY="23.0" prefHeight="200.0" prefWidth="584.0" />
+                      </children>
+                    </AnchorPane>
+                  </content>
+                </Tab>
+
+                <!-- Tab 2: Supplies -->
+                <Tab text="Supplies">
+                  <content>
+                    <AnchorPane prefHeight="322.0" prefWidth="600.0">
+                      <children>
+                        <Button fx:id="add_new_supplies" layoutX="265.0" layoutY="244.0" mnemonicParsing="false" onAction="#handleAddNewSupply" text="Add Supplies" />
+                        <Label layoutX="241.0" layoutY="158.0" text="Add Supplies">
+                           <font>
+                              <Font size="21.0" />
+                           </font>
+                        </Label>
+                        <TextField fx:id="new_supplies_name" layoutX="10.0" layoutY="205.0" prefHeight="32.0" prefWidth="289.0" promptText="Short Description or name for the supplies*" />
+                        <TextField fx:id="new_supplies_quantity" alignment="CENTER" layoutX="311.0" layoutY="205.0" prefHeight="32.0" prefWidth="281.0" promptText="How Many supplies*" />
+                        <Label layoutX="112.0" layoutY="184.0" text="Supplies Name:" />
+                        <Label layoutX="427.0" layoutY="184.0" text="Quantity:" />
+                        <Label layoutX="228.0" layoutY="6.0" text="Assign supplies to active team">
+                           <font>
+                              <Font name="System Bold" size="13.0" />
+                           </font>
+                        </Label>
+                        <Separator layoutX="380.0" layoutY="170.0" prefWidth="200.0" />
+                        <Separator layoutX="21.0" layoutY="170.0" prefWidth="200.0" />
+                        <ComboBox fx:id="select_supplies_list_combobox" layoutX="93.0" layoutY="121.0" prefHeight="25.0" prefWidth="172.0" promptText="Assign Supplies" />
+                        <Button fx:id="assign_supplies_proceed_button" layoutX="342.0" layoutY="121.0" mnemonicParsing="false" onAction="#handleassign_suppliessuccess" prefHeight="25.0" prefWidth="171.0" text="Proceed" />
+                        <ListView fx:id="activeTeamList_for_supplies" layoutX="9.0" layoutY="28.0" prefHeight="82.0" prefWidth="584.0" />
+                      </children>
+                    </AnchorPane>
+                  </content>
+                </Tab>
+
+                <!-- Tab 3: Alerting -->
+                <Tab text="Alerting">
+                    <content>
+                        <AnchorPane prefHeight="300.0" prefWidth="600.0">
+                            <children>
+                                <Text layoutX="236.0" layoutY="35.0" text="Send alert to the Region" textAlignment="CENTER">
+                           <font>
+                              <Font name="System Bold" size="13.0" />
+                           </font></Text>
+                                <ComboBox fx:id="select_region_for_alerting_combobox" layoutX="192.0" layoutY="53.0" prefWidth="218.0" promptText="Select the Region to send alert" />
+                                <Button fx:id="send_alert_to_selected_region_button" layoutX="261.0" layoutY="92.0" onAction="#handleSendAlertToRegion" text="Send Alert" />
+
+                                <Separator layoutX="0.0" layoutY="131.0" prefWidth="600.0" />
+
+                                <Text layoutX="226.0" layoutY="171.0" text="Remove active alert Region" textAlignment="CENTER" />
+                                <ComboBox fx:id="remove_selected_region_from_alerting_combobox" layoutX="153.0" layoutY="191.0" prefWidth="292.0" promptText="Select the Region to remove from Alert mode" />
+                                <Button fx:id="remove_alert_selected_region_button" layoutX="253.0" layoutY="231.0" onAction="#handleRemoveAlertFromRegion" text="Remove Alert" />
+                            </children>
+                        </AnchorPane>
+                    </content>
+                </Tab>
+            </tabs>
+        </TabPane>
+    </children>
+</AnchorPane>
