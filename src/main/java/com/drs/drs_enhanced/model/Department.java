@@ -25,8 +25,8 @@ public class Department extends User{
     public Department() {
     }
 
-    public Department(String departmentName, List<Supply> supplies, Long userId, String name, String email, String password, String userType, String region) {
-        super(userId, name, email, password, userType, region);
+    public Department(String departmentName, List<Supply> supplies, String name, String email, String password, String userType, String region) {
+        super(name, email, password, userType, region);
         this.departmentName = departmentName;
         this.supplies = supplies;
     }

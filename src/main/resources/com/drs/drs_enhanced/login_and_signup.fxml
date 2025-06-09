@@ -27,9 +27,9 @@
             <content>
               <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="263.0" prefWidth="246.0">
                      <children>
-                        <Text layoutX="8.0" layoutY="65.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Email / Phone Number" />
+                        <Text layoutX="8.0" layoutY="65.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Email" />
                         <Text layoutX="8.0" layoutY="121.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Password" />
-                        <TextField fx:id="login_email_or_phone_no" layoutX="9.0" layoutY="69.0" prefHeight="25.0" prefWidth="269.0" promptText="Enter Your Email / Phone number" />
+                        <TextField fx:id="login_email" layoutX="9.0" layoutY="69.0" prefHeight="25.0" prefWidth="269.0" promptText="Enter Your Email" />
                         <Button fx:id="user_login_button" layoutX="57.0" layoutY="202.0" mnemonicParsing="false" onAction="#handleUserLogin" prefHeight="37.0" prefWidth="175.0" text="Proceed to Login" />
                         <Text layoutX="10.0" layoutY="283.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Stay connected. Stay safe. Join us in making disaster response faster and stronger." textAlignment="CENTER" wrappingWidth="268.5" />
                         <ComboBox fx:id="login_user_type" layoutX="9.0" layoutY="14.0" prefHeight="25.0" prefWidth="269.0" promptText="Select the user type " />
@@ -50,13 +50,13 @@
               <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="263.0" prefWidth="256.0">
                      <children>
                         <Text layoutX="8.0" layoutY="23.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Name" />
-                        <Text layoutX="8.0" layoutY="67.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Email / Phone Number" />
+                        <Text layoutX="8.0" layoutY="67.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Email" />
                         <Text layoutX="8.0" layoutY="111.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Password" />
                         <Text layoutX="9.0" layoutY="155.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Address" />
                         <ComboBox fx:id="register_user_region" layoutX="9.0" layoutY="217.0" prefHeight="25.0" prefWidth="269.0" promptText="Select the Region" />
-                        <Button fx:id="register_public_user_button" layoutX="116.0" layoutY="254.0" mnemonicParsing="false" onAction="#redirect_to_login_page" text="Register" />
+                        <Button fx:id="register_public_user_button" layoutX="116.0" layoutY="254.0" mnemonicParsing="false" onAction="#registerUser" text="Register" />
                         <TextArea fx:id="register_user_full_address" layoutX="8.0" layoutY="160.0" prefHeight="48.0" prefWidth="269.0" promptText="Enter Your Full Address" />
-                        <TextField fx:id="register_user_email_phone" layoutX="8.0" layoutY="71.0" prefHeight="25.0" prefWidth="269.0" promptText="Enter Your Email / Ph. no" />
+                        <TextField fx:id="register_user_email" layoutX="8.0" layoutY="71.0" prefHeight="25.0" prefWidth="269.0" promptText="Enter Your Email " />
                         <TextField fx:id="register_user_name" layoutX="8.0" layoutY="26.0" prefHeight="25.0" prefWidth="269.0" promptText="Enter Your Full Name" />
                         <PasswordField fx:id="register_user_password" layoutX="9.0" layoutY="115.0" prefHeight="25.0" prefWidth="269.0" promptText="Enter Your Password" />
                         <Text fx:id="register_public_user_alert_message" layoutX="12.0" layoutY="298.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Alert Message" textAlignment="CENTER" wrappingWidth="268.5" />

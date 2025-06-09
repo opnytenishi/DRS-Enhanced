@@ -1,9 +1,7 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/javafx/FXMLController.java to edit this template
- */
 package com.drs.drs_enhanced.controller;
 
+import com.drs.drs_enhanced.backend.ClientSocketHelper;
+import com.drs.drs_enhanced.model.*;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -22,15 +20,10 @@ import javafx.scene.control.TextField;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
-/**
- * FXML Login_and_signup_Controller class for login and Register user interface
- *
- * @author Mohamed Badurudeen Tharick
- */
 public class Login_and_signup_Controller implements Initializable {
 
     @FXML
-    private TextField login_email_or_phone_no;
+    private TextField login_email;
     @FXML
     private ComboBox<UserType> login_user_type;
     @FXML
@@ -40,7 +33,7 @@ public class Login_and_signup_Controller implements Initializable {
     @FXML
     private TextArea register_user_full_address;
     @FXML
-    private TextField register_user_email_phone;
+    private TextField register_user_email;
     @FXML
     private TextField register_user_name;
     @FXML
@@ -56,45 +49,15 @@ public class Login_and_signup_Controller implements Initializable {
 
     /**
      * Initializes the controller class.
+     * @param url
+     * @param rb
      */
     @Override
-    public void initialize(URL url, ResourceBundle rb) {
-        // TODO       
+    public void initialize(URL url, ResourceBundle rb) {       
         login_user_type.getItems().setAll(UserType.values());
         register_user_region.getItems().setAll(Region.values());
         login_alert_message.setText("");        
-        register_public_user_alert_message.setText("");
-
-
-    }
-
-    public enum UserType {
-        PUBLIC_USER("Public User"),
-        GUEST_USER("Guest User"),
-        RESPONDER("Responder"),
-        OTHER_DEPARTMENT("Fire Station"),        
-        OTHER_DEPARTMENT_2("Mobile Hospital"),        
-        OTHER_DEPARTMENT_3("Rescue Team");
-
-        private final String displayName;
-
-        UserType(String displayName) {
-            this.displayName = displayName;
-        }
-
-        @Override
-        public String toString() {
-            return displayName;
-        }
-
-    }
-
-    public enum Region {
-        NORTH,
-        SOUTH,
-        EAST,
-        WEST,
-        CENTRAL
+        register_public_user_alert_message.setText("");   
     }
 
     @FXML
@@ -104,39 +67,61 @@ public class Login_and_signup_Controller implements Initializable {
         if (selectedUserType == null) {
             login_alert_message.setText("Please select a user type.");          
             return;
+        } 
+        if (login_email.getText().trim().isEmpty() || login_password.getText().trim().isEmpty()) {
+            login_alert_message.setText("Please enter all details.");          
+            return;
         }
 
         String fxmlFile = null;
         String title = null;
-
+        
+        User loginUser;
+       
         switch (selectedUserType) {
             case PUBLIC_USER:
                 fxmlFile = "public_user_page.fxml";
                 title = "DRS - Public User";
+                loginUser = new PublicUser();
                 break;
             case RESPONDER:
                 fxmlFile = "responder_page.fxml";
                 title = "DRS - Responder";
+                loginUser = new Responder();
                 break;
             case OTHER_DEPARTMENT:
                 fxmlFile = "other_department.fxml";
                 title = "DRS - Other Department";
+                loginUser = new Department();
                 break;
             case OTHER_DEPARTMENT_2:
                 fxmlFile = "other_department.fxml";
                 title = "DRS - Other Department";
+                loginUser = new Department();
                 break;
             case OTHER_DEPARTMENT_3:
                 fxmlFile = "other_department.fxml";
                 title = "DRS - Other Department";
+                loginUser = new Department();
                 break;
             case GUEST_USER:
                 fxmlFile = "public_user_page.fxml";
                 title = "DRS - Guest User";
+                loginUser = new PublicUser();
+                break;
+            default:
+                fxmlFile = "public_user_page.fxml";
+                title = "DRS - Guest User";
+                loginUser = new PublicUser();
                 break;
         }
+        
+        loginUser.setEmail(login_email.getText().trim());
+        loginUser.setPassword(login_password.getText().trim());
+        
+        Object response = ClientSocketHelper.sendRequest("login", loginUser);
 
-        if (fxmlFile != null) {
+        if (response instanceof User){
             FXMLLoader loader = new FXMLLoader(
                     getClass().getResource("/com/drs/drs_enhanced/" + fxmlFile));
             Parent root = loader.load();
@@ -146,12 +131,43 @@ public class Login_and_signup_Controller implements Initializable {
             stage.setTitle(title);
             stage.setResizable(false);
             stage.show();
+        } else {
+            login_alert_message.setText("Login Failed. Please try again!");
         }
+        
     }
     
     @FXML
-    private void redirect_to_login_page(ActionEvent event) throws IOException {
-            register_public_user_alert_message.setText("Registration is under development,\nPlease login from login tab, Thank You.");          
+    private void registerUser(ActionEvent event) throws IOException {
+        String name = register_user_name.getText().trim();
+        String email = register_user_email.getText().trim();
+        String password = register_user_password.getText().trim();
+        String address = register_user_full_address.getText().trim();
+        Region region = register_user_region.getValue();
+
+        if (name.isEmpty() || email.isEmpty() || password.isEmpty() || 
+                address.isEmpty() || region == null) {
+            register_public_user_alert_message.setText("Please enter all details.");
+            return;
+        }
+        
+        User user = new PublicUser (name, email, password, 
+                UserType.PUBLIC_USER.toString(), address);
+        
+        Object response = ClientSocketHelper.sendRequest("register", user);
+        
+        if (response instanceof Boolean) {
+            boolean success = (Boolean) response;
+
+            if (success) {
+                register_public_user_alert_message
+                    .setText("User Registration,\nPlease login from login tab, Thank You."); 
+            } else {
+                register_public_user_alert_message.setText("Registration Failed. Please try again!");
+            }
+        } else {
+            register_public_user_alert_message.setText("Registration Failed. Please try again!");
+        }
     }
 
 }

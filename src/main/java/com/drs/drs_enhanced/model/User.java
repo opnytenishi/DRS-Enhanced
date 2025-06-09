@@ -7,12 +7,27 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Inheritance;
 import jakarta.persistence.InheritanceType;
+import jakarta.persistence.NamedQueries;
+import jakarta.persistence.NamedQuery;
 import jakarta.persistence.Table;
+import java.io.Serializable;
 
 @Entity
 @Table(name = "users")
 @Inheritance(strategy = InheritanceType.JOINED)
-public abstract class User {
+@NamedQueries({
+    @NamedQuery(
+        name = "User.findByEmail",
+        query = "SELECT user FROM User user WHERE user.email = :email"
+    ),
+    @NamedQuery(
+    name = "User.login",
+    query = "SELECT user FROM User user WHERE user.email = :email AND user.password = :password"
+    )
+})
+public abstract class User implements Serializable {
+
+    private static final long serialVersionUID = 1L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -36,8 +51,7 @@ public abstract class User {
     public User() {
     }
 
-    public User(Long userId, String name, String email, String password, String userType, String region) {
-        this.userId = userId;
+    public User(String name, String email, String password, String userType, String region) {
         this.name = name;
         this.email = email;
         this.password = password;
