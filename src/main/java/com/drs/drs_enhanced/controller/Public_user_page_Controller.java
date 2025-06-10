@@ -1,35 +1,25 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/javafx/FXMLController.java to edit this template
- */
 package com.drs.drs_enhanced.controller;
 
-import java.io.IOException;
+import com.drs.drs_enhanced.App;
+import com.drs.drs_enhanced.view.IPublicUser;
 import java.net.URL;
 import javafx.util.Duration;
 import java.util.ResourceBundle;
 import javafx.animation.PauseTransition;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextArea;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
-import javafx.stage.Stage;
-/**
- * FXML Controller class
- *
- * @author Mohamed Badurudeen Tharick
- */
-public class Public_user_page_Controller implements Initializable {
+
+public class Public_user_page_Controller implements Initializable, IPublicUser {
 
     @FXML
     private Text alert_safe_danger;
@@ -45,9 +35,6 @@ public class Public_user_page_Controller implements Initializable {
 
     @FXML
     private ListView<String> shelter_list;
-
-    @FXML
-    private Button public_user_logout_button;
 
     @FXML
     private ListView<String> public_notifications_list;
@@ -93,7 +80,8 @@ public class Public_user_page_Controller implements Initializable {
     }
 
     @FXML
-    private void handleRequestHelpButtonClick() {
+    @Override
+    public void handleRequestHelpButtonClick() {
         String selectedIncident = public_user_incident_type.getValue();
         String description = public_user_description.getText().trim();
 
@@ -125,16 +113,15 @@ public class Public_user_page_Controller implements Initializable {
     }
 
     @FXML
-    private void handleFakeLogoutFrom_public_user(ActionEvent event) throws IOException {
-        FXMLLoader loader = new FXMLLoader(getClass()
-                .getResource("/com/drs/drs_enhanced/login_and_signup.fxml"));
-        Parent root = loader.load();
-
-        // Get current stage
-        Stage stage = (Stage) public_user_logout_button.getScene().getWindow();
-        stage.setScene(new Scene(root));
-        stage.setTitle("DRS System");
-        stage.setResizable(false);
-        stage.show();
+    @Override
+    public void handleFakeLogoutFrom_public_user() {
+        try {
+            FXMLLoader loader = new FXMLLoader(
+                    getClass().getResource("/com/drs/drs_enhanced/login_and_signup.fxml"));
+            Parent root = loader.load();
+            App.switchScene(root);
+        } catch (Exception ex) {
+            System.out.println("Error : " + ex.getMessage());
+        }
     }
 }

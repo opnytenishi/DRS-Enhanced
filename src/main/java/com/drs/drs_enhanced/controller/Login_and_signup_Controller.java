@@ -1,18 +1,16 @@
 package com.drs.drs_enhanced.controller;
 
+import com.drs.drs_enhanced.App;
 import com.drs.drs_enhanced.backend.ClientSocketHelper;
 import static com.drs.drs_enhanced.controller.UserType.OTHER_DEPARTMENT;
 import com.drs.drs_enhanced.model.*;
-import java.io.IOException;
+import com.drs.drs_enhanced.view.ILoginAndSignup;
 import java.net.URL;
 import java.util.ResourceBundle;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
-import javafx.scene.Scene;
-
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.PasswordField;
@@ -21,9 +19,8 @@ import javafx.scene.control.TabPane;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.text.Text;
-import javafx.stage.Stage;
 
-public class Login_and_signup_Controller implements Initializable {
+public class Login_and_signup_Controller implements Initializable, ILoginAndSignup {
 
     @FXML
     private TextField login_email;
@@ -86,6 +83,7 @@ public class Login_and_signup_Controller implements Initializable {
     /**
      * Resets all text fields in the current tab.
      */
+    @Override
     public void resetFields() {
         login_email.clear();
         login_password.setText("");
@@ -102,7 +100,8 @@ public class Login_and_signup_Controller implements Initializable {
     }
 
     @FXML
-    private void handleUserLogin(ActionEvent event) throws IOException {
+    @Override
+    public void handleUserLogin() {
         UserType selectedUserType = login_user_type.getValue();
 
         if (selectedUserType == null) {
@@ -153,15 +152,18 @@ public class Login_and_signup_Controller implements Initializable {
         Object response = ClientSocketHelper.sendRequest("login", loginUser);
 
         if (response instanceof User) {
-            FXMLLoader loader = new FXMLLoader(
-                    getClass().getResource("/com/drs/drs_enhanced/" + fxmlFile));
-            Parent root = loader.load();
+         
+            try {
+                FXMLLoader loader = new FXMLLoader(
+                        getClass().getResource("/com/drs/drs_enhanced/" + fxmlFile));
+                Parent root = loader.load();
 
-            Stage stage = (Stage) user_login_button.getScene().getWindow();
-            stage.setScene(new Scene(root));
-            stage.setTitle(title);
-            stage.setResizable(false);
-            stage.show();
+                App.switchScene(root);
+
+            } catch (Exception ex) {
+                System.out.println("Error : " + ex.getMessage());
+            }
+            
         } else {
             login_alert_message.setText("Login Failed. Please try again!");
         }
@@ -169,7 +171,8 @@ public class Login_and_signup_Controller implements Initializable {
     }
 
     @FXML
-    private void registerUser(ActionEvent event) throws IOException {
+    @Override
+    public void registerUser() {
         String name = register_user_name.getText().trim();
         String email = register_user_email.getText().trim();
         String password = register_user_password.getText().trim();
@@ -183,15 +186,13 @@ public class Login_and_signup_Controller implements Initializable {
         }
 
         User user = new PublicUser(name, email, password, address);
-
         Object response = ClientSocketHelper.sendRequest("register", user);
 
         if (response instanceof Boolean) {
             boolean success = (Boolean) response;
-
             if (success) {
                 register_public_user_alert_message
-                        .setText("User Registration,\nPlease login from login tab, Thank You.");
+                        .setText("Public User Registered,\nPlease login from login tab, Thank You.");
             } else {
                 register_public_user_alert_message.setText("Registration Failed. Please try again!");
             }
@@ -201,7 +202,8 @@ public class Login_and_signup_Controller implements Initializable {
     }
 
     @FXML
-    private void registerOtherDepartmentUser(ActionEvent event) throws IOException {
+    @Override
+    public void registerOtherDepartmentUser() {
         String name = register_department_name.getText().trim();
         String email = register_department_email.getText().trim();
         String password = register_department_password.getText().trim();
@@ -212,15 +214,13 @@ public class Login_and_signup_Controller implements Initializable {
         }
 
         User user = new Department(name, null, name, email, password, "NA");
-
         Object response = ClientSocketHelper.sendRequest("register", user);
 
         if (response instanceof Boolean) {
             boolean success = (Boolean) response;
-
             if (success) {
                 department_register_alert_message
-                        .setText("Department User Registration,\nPlease login from login tab, Thank You.");
+                        .setText("Department User Registered,\nPlease login from login tab, Thank You.");
             } else {
                 department_register_alert_message.setText("Registration Failed. Please try again!");
             }

@@ -4,6 +4,8 @@
  */
 package com.drs.drs_enhanced.controller;
 
+import com.drs.drs_enhanced.App;
+import com.drs.drs_enhanced.view.IResponder;
 import java.io.IOException;
 import java.net.URL;
 import java.util.HashSet;
@@ -17,11 +19,8 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
-import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
-import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
-import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
@@ -30,7 +29,7 @@ import javafx.stage.Stage;
  *
  * @author Mohamed Badurudeen Tharick
  */
-public class Responder_page_Controller implements Initializable {
+public class Responder_page_Controller implements Initializable, IResponder {
 
     @FXML private Button responder_logout_button;
     @FXML private Text success_or_error_status;
@@ -85,18 +84,21 @@ public class Responder_page_Controller implements Initializable {
     }
 
     @FXML
-    private void handleFakeLogoutFrom_responder(ActionEvent event) throws IOException {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("login_and_signup.fxml"));
-        Parent root = loader.load();
-        Stage stage = (Stage) responder_logout_button.getScene().getWindow();
-        stage.setScene(new Scene(root));
-        stage.setTitle("DRS System");
-        stage.setResizable(false);
-        stage.show();
+    @Override
+    public void handleFakeLogoutFrom_responder() {
+        try {
+            FXMLLoader loader = new FXMLLoader(
+                    getClass().getResource("/com/drs/drs_enhanced/login_and_signup.fxml"));
+            Parent root = loader.load();
+            App.switchScene(root);
+        } catch (Exception ex) {
+            System.out.println("Error : " + ex.getMessage());
+        }
     }
 
     @FXML
-    private void handleAssignTeamToIncident(ActionEvent event) {
+    @Override
+    public void handleAssignTeamToIncident() {
         String selectedTeam = assign_teamComboBox.getValue();
         if (selectedTeam != null) {
             success_or_error_status.setText("✔ " + selectedTeam + " assigned to the incident successfully.");
@@ -106,7 +108,8 @@ public class Responder_page_Controller implements Initializable {
     }
 
     @FXML
-    private void handleAddNewSupply(ActionEvent event) {
+    @Override
+    public void handleAddNewSupply() {
         String supplyName = new_supplies_name.getText().trim();
         String quantityText = new_supplies_quantity.getText().trim();
 
@@ -136,7 +139,8 @@ public class Responder_page_Controller implements Initializable {
     }
 
     @FXML
-    private void handleSendAlertToRegion(ActionEvent event) {
+    @Override
+    public void handleSendAlertToRegion() {
         String selectedRegion = select_region_for_alerting_combobox.getValue();
         if (selectedRegion != null) {
             success_or_error_status.setText("✔ Alert sent to " + selectedRegion + " region.");
@@ -146,7 +150,8 @@ public class Responder_page_Controller implements Initializable {
     }
 
     @FXML
-    private void handleRemoveAlertFromRegion(ActionEvent event) {
+    @Override
+    public void handleRemoveAlertFromRegion() {
         String selectedRegion = remove_selected_region_from_alerting_combobox.getValue();
         if (selectedRegion != null) {
             success_or_error_status.setText("✔ Alert removed from " + selectedRegion + " region.");
@@ -156,7 +161,8 @@ public class Responder_page_Controller implements Initializable {
     }
 
     @FXML
-    private void handleassign_suppliessuccess(ActionEvent event) {
+    @Override
+    public void handleassign_suppliessuccess() {
         success_or_error_status.setText("✔ Supplies assigned successfully.");
     }
 }

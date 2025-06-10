@@ -1,9 +1,7 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/javafx/FXMLController.java to edit this template
- */
 package com.drs.drs_enhanced.controller;
 
+import com.drs.drs_enhanced.App;
+import com.drs.drs_enhanced.view.IOtherDepartment;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -18,12 +16,8 @@ import javafx.scene.control.Button;
 import javafx.scene.control.TextArea;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
-/**
- * FXML Controller class
- *
- * @author Mohamed Badurudeen Tharick
- */
-public class Other_Department_PageController implements Initializable {
+
+public class Other_Department_PageController implements Initializable, IOtherDepartment {
 
     @FXML
     private Text department_name;
@@ -51,7 +45,8 @@ public class Other_Department_PageController implements Initializable {
     }
 
     @FXML
-    private void handleMarkAsCompleted() {
+    @Override
+    public void handleMarkAsCompleted() {
         department_status_message.setText("✔ Marked as Completed. Thank you!");
 
         // Clear all fields after marking as completed
@@ -61,15 +56,15 @@ public class Other_Department_PageController implements Initializable {
     }
 
     @FXML
-    private void handleFakeLogoutFrom_department(ActionEvent event) throws IOException {
-        FXMLLoader loader = new FXMLLoader(getClass()
-                .getResource("/com/drs/drs_enhanced/login_and_signup.fxml"));
-        Parent root = loader.load();
-
-        Stage stage = (Stage) department_logout_button.getScene().getWindow();
-        stage.setScene(new Scene(root));
-        stage.setTitle("DRS System");
-        stage.setResizable(false);
-        stage.show();
+    @Override
+    public void handleFakeLogoutFrom_department() {
+        try {
+            FXMLLoader loader = new FXMLLoader(
+                    getClass().getResource("/com/drs/drs_enhanced/login_and_signup.fxml"));
+            Parent root = loader.load();
+            App.switchScene(root);
+        } catch (Exception ex) {
+            System.out.println("Error : " + ex.getMessage());
+        }
     }
 }
