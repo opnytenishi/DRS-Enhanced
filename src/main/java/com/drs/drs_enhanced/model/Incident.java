@@ -31,8 +31,7 @@ public class Incident {
     public Incident() {
     }
 
-    public Incident(Long id, String incidentType, String description, int priorityLevel, User user, Department assignedDepartment) {
-        this.id = id;
+    public Incident(String incidentType, String description, int priorityLevel, User user, Department assignedDepartment) {
         this.incidentType = incidentType;
         this.description = description;
         this.priorityLevel = priorityLevel;

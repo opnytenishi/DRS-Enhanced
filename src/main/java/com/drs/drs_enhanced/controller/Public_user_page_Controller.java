@@ -1,6 +1,8 @@
 package com.drs.drs_enhanced.controller;
 
 import com.drs.drs_enhanced.App;
+import com.drs.drs_enhanced.backend.ClientSocketHelper;
+import com.drs.drs_enhanced.model.Incident;
 import com.drs.drs_enhanced.view.IPublicUser;
 import java.net.URL;
 import javafx.util.Duration;
@@ -89,10 +91,22 @@ public class Public_user_page_Controller implements Initializable, IPublicUser {
             public_user_status_message_text_field.setFill(Color.RED);
             public_user_status_message_text_field.setText("Please select an incident type and enter a description.");
         } else {
-            // Simulate request being sent
-            public_user_status_message_text_field.setFill(Color.GREEN);
-            public_user_status_message_text_field.setText("Request sent successfully! (Re-requesting help disabled for 2 hours)");
+            Incident incident = new Incident(selectedIncident, description, 0, null, null);
+            Object response = ClientSocketHelper.sendRequest("sendHelp", incident);
 
+            if (response instanceof Boolean) {
+                boolean success = (Boolean) response;
+                if (success) {
+                    public_user_status_message_text_field.setFill(Color.GREEN);
+                    public_user_status_message_text_field.setText("Request sent successfully! (Re-requesting help disabled for 2 hours)");
+                } else {
+                    public_user_status_message_text_field.setFill(Color.RED);
+                    public_user_status_message_text_field.setText("Registration Failed. Please try again");
+                }
+            } else {
+                public_user_status_message_text_field.setFill(Color.RED);
+                public_user_status_message_text_field.setText("Registration Failed. Please try again");
+            }
             // Disable inputs
             public_user_incident_type.setDisable(true);
             public_user_description.setDisable(true);
@@ -110,6 +124,7 @@ public class Public_user_page_Controller implements Initializable, IPublicUser {
 
             enableInputsTimer.play();
         }
+        
     }
 
     @FXML
