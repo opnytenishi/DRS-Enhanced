@@ -127,7 +127,7 @@ public class Login_and_signup_Controller implements Initializable, ILoginAndSign
             case RESPONDER:
                 fxmlFile = "responder_page.fxml";
                 title = "DRS - Responder";
-                loginUser = new User();
+                loginUser = new Responder();
                 break;
             case OTHER_DEPARTMENT:
                 fxmlFile = "other_department.fxml";
@@ -153,6 +153,30 @@ public class Login_and_signup_Controller implements Initializable, ILoginAndSign
 
         if (response instanceof User) {
          
+            User loggedInUser = (User) response;
+
+            boolean valid = false;
+
+            switch (selectedUserType) {
+                case PUBLIC_USER:
+                case GUEST_USER:
+                    valid = loggedInUser instanceof PublicUser;
+                    break;
+                case RESPONDER:
+                    valid = loggedInUser instanceof Responder;;
+                    break;
+                case OTHER_DEPARTMENT:
+                    valid = loggedInUser instanceof Department;
+                    break;
+                default:
+                    valid = false;
+            }
+
+            if (!valid) {
+                login_alert_message.setText("Incorrect user type selected.");
+                return;
+            }
+
             try {
                 FXMLLoader loader = new FXMLLoader(
                         getClass().getResource("/com/drs/drs_enhanced/" + fxmlFile));
