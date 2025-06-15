@@ -181,7 +181,19 @@ public class Login_and_signup_Controller implements Initializable, ILoginAndSign
                 FXMLLoader loader = new FXMLLoader(
                         getClass().getResource("/com/drs/drs_enhanced/" + fxmlFile));
                 Parent root = loader.load();
-
+                
+                switch (selectedUserType) {
+                    case PUBLIC_USER:
+                        Public_user_page_Controller controller = loader.getController();
+                        controller.setLoggedInUser(loggedInUser);
+                        break;
+                    case RESPONDER:
+                        break;
+                    case OTHER_DEPARTMENT:
+                        break;
+                    default:
+                        valid = false;
+                }
                 App.switchScene(root);
 
             } catch (Exception ex) {

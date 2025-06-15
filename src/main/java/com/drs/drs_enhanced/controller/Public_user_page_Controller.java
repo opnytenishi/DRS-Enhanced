@@ -3,6 +3,7 @@ package com.drs.drs_enhanced.controller;
 import com.drs.drs_enhanced.App;
 import com.drs.drs_enhanced.backend.ClientSocketHelper;
 import com.drs.drs_enhanced.model.Incident;
+import com.drs.drs_enhanced.model.User;
 import com.drs.drs_enhanced.view.IPublicUser;
 import java.net.URL;
 import javafx.util.Duration;
@@ -43,7 +44,13 @@ public class Public_user_page_Controller implements Initializable, IPublicUser {
 
     @FXML
     private Text public_user_status_message_text_field;
-
+    
+    private User loggedInUser;
+    
+    public void setLoggedInUser(User loggedInUser) {
+        this.loggedInUser = loggedInUser;
+    }
+    
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         
@@ -91,7 +98,9 @@ public class Public_user_page_Controller implements Initializable, IPublicUser {
             public_user_status_message_text_field.setFill(Color.RED);
             public_user_status_message_text_field.setText("Please select an incident type and enter a description.");
         } else {
-            Incident incident = new Incident(selectedIncident, description, 0, null, null);
+            
+            
+            Incident incident = new Incident(selectedIncident, description, 0, loggedInUser, null);
             Object response = ClientSocketHelper.sendRequest("sendHelp", incident);
 
             if (response instanceof Boolean) {
@@ -130,6 +139,7 @@ public class Public_user_page_Controller implements Initializable, IPublicUser {
     @Override
     public void handleFakeLogoutFrom_public_user() {
         try {
+            setLoggedInUser(null);
             FXMLLoader loader = new FXMLLoader(
                     getClass().getResource("/com/drs/drs_enhanced/login_and_signup.fxml"));
             Parent root = loader.load();
