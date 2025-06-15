@@ -8,6 +8,7 @@
 <?import javafx.scene.control.Separator?>
 <?import javafx.scene.control.Tab?>
 <?import javafx.scene.control.TabPane?>
+<?import javafx.scene.control.TextArea?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
@@ -33,7 +34,7 @@
                 <Font size="27.0" />
             </font>
         </Text>
-        <Button fx:id="responder_logout_button" layoutX="127.0" layoutY="45.0" onAction="#handleFakeLogoutFrom_responder" text="Log-out" />
+        <Button fx:id="responder_logout_button" layoutX="127.0" layoutY="45.0" onAction="#handleLogoutFrom_responder" text="Log-out" />
         <Text fx:id="success_or_error_status" fill="#1ab02f" layoutX="341.0" layoutY="42.0" text="Alert Messages" textAlignment="CENTER" wrappingWidth="244.5556640625">
             <font>
                 <Font size="14.0" />
@@ -41,7 +42,7 @@
         </Text>
 
         <!-- Main Tabs -->
-        <TabPane layoutY="79.0" prefHeight="322.0" prefWidth="600.0" tabClosingPolicy="UNAVAILABLE">
+        <TabPane fx:id="tabPane" layoutY="79.0" prefHeight="322.0" prefWidth="600.0" tabClosingPolicy="UNAVAILABLE">
             <tabs>
                 <!-- Tab 1: Support and Prioritizing -->
                 <Tab text="Support and Prioritizing">
@@ -65,16 +66,13 @@
                   <content>
                     <AnchorPane prefHeight="322.0" prefWidth="600.0">
                       <children>
-                        <Button fx:id="add_new_supplies" layoutX="265.0" layoutY="244.0" mnemonicParsing="false" onAction="#handleAddNewSupply" text="Add Supplies" />
+                        <Button fx:id="add_new_supplies" layoutX="256.0" layoutY="252.0" mnemonicParsing="false" onAction="#handleAddNewSupply" text="Add Supplies" />
                         <Label layoutX="241.0" layoutY="158.0" text="Add Supplies">
                            <font>
                               <Font size="21.0" />
                            </font>
                         </Label>
-                        <TextField fx:id="new_supplies_name" layoutX="10.0" layoutY="205.0" prefHeight="32.0" prefWidth="289.0" promptText="Short Description or name for the supplies*" />
-                        <TextField fx:id="new_supplies_quantity" alignment="CENTER" layoutX="311.0" layoutY="205.0" prefHeight="32.0" prefWidth="281.0" promptText="How Many supplies*" />
-                        <Label layoutX="112.0" layoutY="184.0" text="Supplies Name:" />
-                        <Label layoutX="427.0" layoutY="184.0" text="Quantity:" />
+                        <TextField fx:id="new_supplies_name" layoutX="157.0" layoutY="202.0" prefHeight="32.0" prefWidth="289.0" promptText="Short Description or name for the supplies*" />
                         <Label layoutX="228.0" layoutY="6.0" text="Assign supplies to active team">
                            <font>
                               <Font name="System Bold" size="13.0" />
@@ -89,6 +87,30 @@
                     </AnchorPane>
                   </content>
                 </Tab>
+            <Tab text="Notification and Add Shelter">
+              <content>
+                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                     <children>
+                        <Separator layoutX="299.0" layoutY="14.0" orientation="VERTICAL" prefHeight="272.0" prefWidth="4.0" />
+                        <Text layoutX="43.0" layoutY="44.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Update Nearby Shelters" textAlignment="CENTER">
+                           <font>
+                              <Font name="System Bold" size="21.0" />
+                           </font>
+                        </Text>
+                        <Text layoutX="345.0" layoutY="43.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Send Public Notification" textAlignment="CENTER">
+                           <font>
+                              <Font name="System Bold" size="21.0" />
+                           </font>
+                        </Text>
+                        <ComboBox fx:id="select_shelter_region_from_responder_combobox" layoutX="77.0" layoutY="176.0" prefWidth="150.0" promptText="Select the Region" />
+                        <TextArea fx:id="notification_by_responder_textbox" layoutX="350.0" layoutY="64.0" prefHeight="148.0" prefWidth="200.0" promptText="Enter what the notification should be (This will be displayed in all public users portal under notification Box)" />
+                        <TextArea fx:id="shelter_details_from_responder_textbox" layoutX="48.0" layoutY="64.0" prefHeight="98.0" prefWidth="207.0" promptText="Enter the details of Nearby Shelter to the specific region to help public users get access to the information qicker based on their selected region." />
+                        <Button fx:id="send_nearby_shelter_by_responder_button" layoutX="81.0" layoutY="240.0" mnemonicParsing="false" onAction="#handleSendNearbyShelter" text="Update Nearby Shelter" />
+                        <Button fx:id="send_notification_by_responder_button" layoutX="394.0" layoutY="240.0" mnemonicParsing="false" onAction="#handleSendNotification" text="Send Notification" />
+                     </children>
+                  </AnchorPane>
+              </content>
+            </Tab>
 
                 <!-- Tab 3: Alerting -->
                 <Tab text="Alerting">

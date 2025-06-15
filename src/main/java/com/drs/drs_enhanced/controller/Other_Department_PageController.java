@@ -57,7 +57,7 @@ public class Other_Department_PageController implements Initializable, IOtherDep
 
     @FXML
     @Override
-    public void handleFakeLogoutFrom_department() {
+    public void handleLogoutFrom_department() {
         try {
             FXMLLoader loader = new FXMLLoader(
                     getClass().getResource("/com/drs/drs_enhanced/login_and_signup.fxml"));

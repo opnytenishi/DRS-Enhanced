@@ -81,6 +81,7 @@ public class Login_and_signup_Controller implements Initializable, ILoginAndSign
         }
 
     }
+
     /**
      * Resets all text fields in the current tab.
      */
@@ -153,7 +154,7 @@ public class Login_and_signup_Controller implements Initializable, ILoginAndSign
         Object response = ClientSocketHelper.sendRequest("login", loginUser);
 
         if (response instanceof User) {
-         
+
             User loggedInUser = (User) response;
 
             boolean valid = false;
@@ -164,7 +165,8 @@ public class Login_and_signup_Controller implements Initializable, ILoginAndSign
                     valid = loggedInUser instanceof PublicUser;
                     break;
                 case RESPONDER:
-                    valid = loggedInUser instanceof Responder;;
+                    valid = loggedInUser instanceof Responder;
+                    ;
                     break;
                 case OTHER_DEPARTMENT:
                     valid = loggedInUser instanceof Department;
@@ -182,7 +184,7 @@ public class Login_and_signup_Controller implements Initializable, ILoginAndSign
                 FXMLLoader loader = new FXMLLoader(
                         getClass().getResource("/com/drs/drs_enhanced/" + fxmlFile));
                 Parent root = loader.load();
-                
+
                 switch (selectedUserType) {
                     case PUBLIC_USER:
                         Public_user_page_Controller controller = loader.getController();
@@ -200,7 +202,7 @@ public class Login_and_signup_Controller implements Initializable, ILoginAndSign
             } catch (Exception ex) {
                 System.out.println("Error : " + ex.getMessage());
             }
-            
+
         } else {
             login_alert_message.setText("Login Failed. Please try again!");
         }
@@ -258,7 +260,7 @@ public class Login_and_signup_Controller implements Initializable, ILoginAndSign
         if (response instanceof Boolean) {
             boolean success = (Boolean) response;
             if (success) {
-                                department_register_alert_message.setFill(Color.GREEN);
+                department_register_alert_message.setFill(Color.GREEN);
                 department_register_alert_message
                         .setText("Department User Registered,\nPlease login from login tab, Thank You.");
             } else {
