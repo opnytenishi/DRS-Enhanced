@@ -209,7 +209,7 @@ public class Login_and_signup_Controller implements Initializable, ILoginAndSign
             return;
         }
 
-        User user = new PublicUser(name, email, password, address);
+        User user = new PublicUser(name, email, password, region.toString(), address);
         Object response = ClientSocketHelper.sendRequest("register", user);
 
         if (response instanceof Boolean) {
