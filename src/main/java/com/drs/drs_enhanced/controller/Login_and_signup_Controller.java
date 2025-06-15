@@ -18,6 +18,7 @@ import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
+import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 
 public class Login_and_signup_Controller implements Initializable, ILoginAndSignup {
@@ -227,8 +228,10 @@ public class Login_and_signup_Controller implements Initializable, ILoginAndSign
         if (response instanceof Boolean) {
             boolean success = (Boolean) response;
             if (success) {
+                register_public_user_alert_message.setFill(Color.GREEN);
                 register_public_user_alert_message
                         .setText("Public User Registered,\nPlease login from login tab, Thank You.");
+
             } else {
                 register_public_user_alert_message.setText("Registration Failed. Please try again!");
             }
@@ -255,6 +258,7 @@ public class Login_and_signup_Controller implements Initializable, ILoginAndSign
         if (response instanceof Boolean) {
             boolean success = (Boolean) response;
             if (success) {
+                                department_register_alert_message.setFill(Color.GREEN);
                 department_register_alert_message
                         .setText("Department User Registered,\nPlease login from login tab, Thank You.");
             } else {

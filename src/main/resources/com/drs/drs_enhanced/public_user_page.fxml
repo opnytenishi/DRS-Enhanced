@@ -42,7 +42,7 @@
          </font>
       </Text>
       <ListView fx:id="shelter_list" editable="true" layoutX="311.0" layoutY="140.0" prefHeight="68.0" prefWidth="266.0" />
-      <Button fx:id="public_user_logout_button" layoutX="416.0" layoutY="345.0" mnemonicParsing="false" onAction="#handleFakeLogoutFrom_public_user" text="Logout" />
+      <Button fx:id="public_user_logout_button" layoutX="416.0" layoutY="345.0" mnemonicParsing="false" onAction="#handleLogoutFrom_public_user" text="Logout" />
       <ListView fx:id="public_notifications_list" layoutX="311.0" layoutY="254.0" prefHeight="74.0" prefWidth="266.0" />
       <Text layoutX="311.0" layoutY="247.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Public Notifications">
          <font>

@@ -96,7 +96,7 @@ public class Public_user_page_Controller implements Initializable, IPublicUser {
 
         if (selectedIncident == null || selectedIncident.isEmpty() || description.isEmpty()) {
             public_user_status_message_text_field.setFill(Color.RED);
-            public_user_status_message_text_field.setText("Please select an incident type and enter a description.");
+            public_user_status_message_text_field.setText("Please fill all details");
         } else {
             
             
@@ -107,14 +107,14 @@ public class Public_user_page_Controller implements Initializable, IPublicUser {
                 boolean success = (Boolean) response;
                 if (success) {
                     public_user_status_message_text_field.setFill(Color.GREEN);
-                    public_user_status_message_text_field.setText("Request sent successfully! (Re-requesting help disabled for 2 hours)");
+                    public_user_status_message_text_field.setText("Sent successfully! (Re-requesting disabled for 2 hr)");
                 } else {
                     public_user_status_message_text_field.setFill(Color.RED);
-                    public_user_status_message_text_field.setText("Registration Failed. Please try again");
+                    public_user_status_message_text_field.setText("Submit Failed. Please try again");
                 }
             } else {
                 public_user_status_message_text_field.setFill(Color.RED);
-                public_user_status_message_text_field.setText("Registration Failed. Please try again");
+                public_user_status_message_text_field.setText("Submit Failed. Please try again");
             }
             // Disable inputs
             public_user_incident_type.setDisable(true);
@@ -128,7 +128,7 @@ public class Public_user_page_Controller implements Initializable, IPublicUser {
                 public_user_description.setDisable(false);
                 public_user_request_help.setDisable(false);
                 public_user_status_message_text_field.setFill(Color.DARKBLUE);
-                public_user_status_message_text_field.setText("You can now submit another request if you did not received the help.");
+                public_user_status_message_text_field.setText("You can now submit another request");
             });
 
             enableInputsTimer.play();
@@ -137,7 +137,7 @@ public class Public_user_page_Controller implements Initializable, IPublicUser {
 
     @FXML
     @Override
-    public void handleFakeLogoutFrom_public_user() {
+    public void handleLogoutFrom_public_user() {
         try {
             setLoggedInUser(null);
             FXMLLoader loader = new FXMLLoader(
