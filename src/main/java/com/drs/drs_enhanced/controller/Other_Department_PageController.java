@@ -63,4 +63,10 @@ public class Other_Department_PageController implements Initializable, IOtherDep
             System.out.println("Error : " + ex.getMessage());
         }
     }
+
+    @FXML
+    @Override
+    public void handleReload() {
+       // Add the load handlers here.
+    }
 }

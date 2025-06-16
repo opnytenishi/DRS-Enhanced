@@ -65,8 +65,6 @@ public class Responder_page_Controller implements Initializable, IResponder {
     @FXML
     private TabPane tabPane;
 
-
-
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         success_or_error_status.setText("");
@@ -337,9 +335,10 @@ public class Responder_page_Controller implements Initializable, IResponder {
             if (success) {
                 success_or_error_status.setFill(Color.GREEN);
                 success_or_error_status.setText("✔ Alert sent to " + selectedRegion + " region.");
+                loadAlerts();
             } else {
                 success_or_error_status.setFill(Color.RED);
-                success_or_error_status.setText("⚠ Please select a different region to alert.");
+                success_or_error_status.setText("⚠ " + selectedRegion + " region has been already alerted. select different region.");
             }
         } else {
             success_or_error_status.setFill(Color.RED);
@@ -357,6 +356,7 @@ public class Responder_page_Controller implements Initializable, IResponder {
                 success_or_error_status.setFill(Color.GREEN);
                 success_or_error_status.setText("✔ Alert removed from " + selectedRegion + " region.");
                 loadAlerts();
+
             } else {
                 success_or_error_status.setFill(Color.RED);
                 success_or_error_status.setText("Alert failed to remove");
@@ -396,5 +396,15 @@ public class Responder_page_Controller implements Initializable, IResponder {
             success_or_error_status.setFill(Color.RED);
             success_or_error_status.setText("Please select both a team and a supply.");
         }
+    }
+
+    @FXML
+    @Override
+    public void handleReload() {
+        loadIncidents();
+        loadDepartments();
+        loadSupplies();
+        loadAlerts();
+        resetFields();
     }
 }

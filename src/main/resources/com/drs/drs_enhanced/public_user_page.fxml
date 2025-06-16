@@ -51,6 +51,7 @@
       </Text>
       <Separator layoutY="83.0" prefHeight="3.0" prefWidth="600.0" />
       <Separator layoutX="301.0" layoutY="83.0" orientation="VERTICAL" prefHeight="336.0" prefWidth="4.0" />
+      <Button fx:id="reload_button" layoutX="542.0" layoutY="100.0" mnemonicParsing="false" onAction="#handleReload" text="🔄" />
       <Text fx:id="public_user_status_message_text_field" disable="true" layoutX="14.0" layoutY="389.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Status Message" textAlignment="CENTER" wrappingWidth="280.0" />
    </children>
 </AnchorPane>

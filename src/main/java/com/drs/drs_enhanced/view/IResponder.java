@@ -10,4 +10,5 @@ public interface IResponder {
     public void handleassign_supplies();
     public void handleSendNearbyShelter();
     public void handleSendNotification();
+    public void handleReload();
 }

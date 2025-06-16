@@ -136,5 +136,6 @@
             </tabs>
         </TabPane>
       <AnchorPane prefHeight="75.0" prefWidth="125.0" />
+      <Button fx:id="reload_button" layoutX="202.0" layoutY="45.0" mnemonicParsing="false" onAction="#handleReload" text="🔄" />
     </children>
 </AnchorPane>

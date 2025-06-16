@@ -11,4 +11,5 @@ package com.drs.drs_enhanced.view;
 public interface IOtherDepartment {
     public void handleMarkAsCompleted();
     public void handleLogoutFrom_department();
+    public void handleReload();
 }

@@ -41,6 +41,9 @@ public class Public_user_page_Controller implements Initializable, IPublicUser {
     private Button public_user_request_help;
 
     @FXML
+    private Button reload_button;
+
+    @FXML
     private ListView<Shelter> shelter_list;
 
     @FXML
@@ -114,20 +117,19 @@ public class Public_user_page_Controller implements Initializable, IPublicUser {
     }
 
     private void loadAlertByRegion() {
-        Object response = ClientSocketHelper.sendRequest("regionAlert",loggedInUser.getRegion() );
-        if (response instanceof Boolean){
+        Object response = ClientSocketHelper.sendRequest("regionAlert", loggedInUser.getRegion());
+        if (response instanceof Boolean) {
             boolean alert = (Boolean) response;
-            if (alert){
-                alert_safe_danger.setFill(Color.RED);                
+            if (alert) {
+                alert_safe_danger.setFill(Color.RED);
                 alert_safe_danger.setText("Your in Danger Zone!");
             } else {
-                alert_safe_danger.setFill(Color.GREEN);                
+                alert_safe_danger.setFill(Color.GREEN);
                 alert_safe_danger.setText("Your in Safe Zone!");
             }
         }
     }
 
-    
     @FXML
     @Override
     public void handleRequestHelpButtonClick() {
@@ -172,6 +174,14 @@ public class Public_user_page_Controller implements Initializable, IPublicUser {
 
             enableInputsTimer.play();
         }
+    }
+
+    @FXML
+    @Override
+    public void handleReload() {
+        loadShelters();
+        loadAlertByRegion();
+        loadNotifications();
     }
 
     @FXML
