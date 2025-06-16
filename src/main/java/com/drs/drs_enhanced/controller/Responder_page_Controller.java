@@ -2,6 +2,7 @@ package com.drs.drs_enhanced.controller;
 
 import com.drs.drs_enhanced.App;
 import com.drs.drs_enhanced.backend.ClientSocketHelper;
+import com.drs.drs_enhanced.model.Alert;
 import com.drs.drs_enhanced.model.Department;
 import com.drs.drs_enhanced.model.Incident;
 import com.drs.drs_enhanced.model.Notification;
@@ -305,13 +306,24 @@ public class Responder_page_Controller implements Initializable, IResponder {
     @FXML
     @Override
     public void handleSendAlertToRegion() {
+        
         String selectedRegion = select_region_for_alerting_combobox.getValue();
-        if (selectedRegion != null) {
-            success_or_error_status.setFill(Color.GREEN);
-            success_or_error_status.setText("✔ Alert sent to " + selectedRegion + " region.");
+
+        Alert alertObject = new Alert(selectedRegion);
+        Object response = ClientSocketHelper.sendRequest("addAlert", alertObject);
+
+        if (response instanceof Boolean) {
+            boolean success = (Boolean) response;
+            if (success) {
+                success_or_error_status.setFill(Color.GREEN);
+                success_or_error_status.setText("✔ Alert sent to " + selectedRegion + " region.");
+            } else {
+                success_or_error_status.setFill(Color.RED);
+                success_or_error_status.setText("⚠ Please select a region to alert.");
+            }
         } else {
             success_or_error_status.setFill(Color.RED);
-            success_or_error_status.setText("⚠ Please select a region to alert.");
+            success_or_error_status.setText("Alert Failed");
         }
     }
 
