@@ -5,16 +5,21 @@
 package com.drs.drs_enhanced.controller;
 
 import com.drs.drs_enhanced.App;
+import com.drs.drs_enhanced.backend.ClientSocketHelper;
+import com.drs.drs_enhanced.model.Incident;
 import com.drs.drs_enhanced.view.IResponder;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.ResourceBundle;
 import java.util.Set;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
-import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.ListView;
 import javafx.scene.control.Tab;
@@ -24,11 +29,6 @@ import javafx.scene.control.TextField;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 
-/**
- * FXML Controller class
- *
- * @author Mohamed Badurudeen Tharick
- */
 public class Responder_page_Controller implements Initializable, IResponder {
 
     @FXML
@@ -63,10 +63,6 @@ public class Responder_page_Controller implements Initializable, IResponder {
     @FXML
     private TabPane tabPane;
 
-    private final String[] fakeIncidents = {
-        "Flood in North \n Priority 1", "Fire in East \n Priority 1", "Medical Emergency in South \n Priority 3"
-    };
-
     private final String[] fakeTeams = {
         "Team Alpha", "Team Bravo", "Team Charlie"
     };
@@ -81,8 +77,24 @@ public class Responder_page_Controller implements Initializable, IResponder {
     public void initialize(URL url, ResourceBundle rb) {
         success_or_error_status.setText("");
 
-        // Populate fake incidents into ListView
-        incidentList_for_assign_team.getItems().addAll(fakeIncidents);
+        Object response = ClientSocketHelper.sendRequest("getUnassignedIncidents", null);
+        List<Incident> incidents = new ArrayList<>();
+        if (response instanceof List<?>) {
+            List<?> rawList = (List<?>) response;
+            if (!rawList.isEmpty() && rawList.get(0) instanceof Incident) {
+                for (Object obj : rawList) {
+                    incidents.add((Incident) obj);
+                }
+            }
+        }
+        
+        ObservableList<String> displayStrings = FXCollections.observableArrayList();
+        for (Incident i : incidents) {
+            String display = i.getIncidentType() + " in " + i.getUser().getRegion()
+                           + "\nPriority " + i.getPriorityLevel();
+            displayStrings.add(display);
+        }
+        incidentList_for_assign_team.setItems(displayStrings);
 
         // Populate teams into ComboBox and ListView
         for (String team : fakeTeams) {
