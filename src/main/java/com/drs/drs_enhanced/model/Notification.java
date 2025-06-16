@@ -49,5 +49,10 @@ public class Notification implements Serializable {
         this.id = id;
     }
 
+    @Override
+    public String toString() {
+        return getNotificationDetail();
+    }
+
    
 }

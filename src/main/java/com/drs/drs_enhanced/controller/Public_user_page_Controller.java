@@ -3,6 +3,7 @@ package com.drs.drs_enhanced.controller;
 import com.drs.drs_enhanced.App;
 import com.drs.drs_enhanced.backend.ClientSocketHelper;
 import com.drs.drs_enhanced.model.Incident;
+import com.drs.drs_enhanced.model.Notification;
 import com.drs.drs_enhanced.model.Shelter;
 import com.drs.drs_enhanced.model.User;
 import com.drs.drs_enhanced.view.IPublicUser;
@@ -43,7 +44,7 @@ public class Public_user_page_Controller implements Initializable, IPublicUser {
     private ListView<Shelter> shelter_list;
 
     @FXML
-    private ListView<String> public_notifications_list;
+    private ListView<Notification> public_notifications_list;
 
     @FXML
     private Text public_user_status_message_text_field;
@@ -52,7 +53,7 @@ public class Public_user_page_Controller implements Initializable, IPublicUser {
 
     public void setLoggedInUser(User loggedInUser) {
         this.loggedInUser = loggedInUser;
-        if (this.loggedInUser != null){
+        if (this.loggedInUser != null) {
             loadShelters();
         }
     }
@@ -74,13 +75,7 @@ public class Public_user_page_Controller implements Initializable, IPublicUser {
                 "Landslide"
         );
         public_user_incident_type.setItems(incidentTypes);
-        // Default notifications
-        ObservableList<String> default_notification = FXCollections.observableArrayList(
-                "Flood warning in Region A",
-                "Power outage expected in Region B",
-                "Emergency shelter open in Region C"
-        );
-        public_notifications_list.setItems(default_notification);
+        loadNotifications();
     }
 
     private void loadShelters() {
@@ -98,6 +93,23 @@ public class Public_user_page_Controller implements Initializable, IPublicUser {
 
         ObservableList<Shelter> shelterList = FXCollections.observableArrayList(shelters);
         shelter_list.setItems(shelterList);
+    }
+
+    private void loadNotifications() {
+        Object response = ClientSocketHelper.sendRequest("getAllNotifications", null);
+
+        List<Notification> notifications = new ArrayList<>();
+        if (response instanceof List<?>) {
+            List<?> rawList = (List<?>) response;
+            for (Object obj : rawList) {
+                if (obj instanceof Notification) {
+                    notifications.add((Notification) obj);
+                }
+            }
+        }
+
+        ObservableList<Notification> notificationList = FXCollections.observableArrayList(notifications);
+        public_notifications_list.setItems(notificationList);
     }
 
     @FXML
