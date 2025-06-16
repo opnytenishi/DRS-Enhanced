@@ -4,6 +4,7 @@ import com.drs.drs_enhanced.App;
 import com.drs.drs_enhanced.backend.ClientSocketHelper;
 import com.drs.drs_enhanced.model.Department;
 import com.drs.drs_enhanced.model.Incident;
+import com.drs.drs_enhanced.model.Notification;
 import com.drs.drs_enhanced.model.Shelter;
 import com.drs.drs_enhanced.model.Supply;
 import com.drs.drs_enhanced.view.IResponder;
@@ -74,7 +75,7 @@ public class Responder_page_Controller implements Initializable, IResponder {
         loadIncidents();
         loadDepartments();
         loadSupplies();
-
+        
         // Populate regions into ComboBoxes
         select_region_for_alerting_combobox.getItems().addAll(regions);
         select_shelter_region_from_responder_combobox.getItems().addAll(regions);
@@ -268,7 +269,7 @@ public class Responder_page_Controller implements Initializable, IResponder {
         }
 
         shelter_details_from_responder_textbox.clear();
-  
+
     }
 
     @FXML
@@ -281,8 +282,22 @@ public class Responder_page_Controller implements Initializable, IResponder {
             success_or_error_status.setText("Please enter notification message");
             return;
         }
-        success_or_error_status.setFill(Color.GREEN);
-        success_or_error_status.setText("✔ Notification sent");
+        Notification notificationObject = new Notification(notification);
+        Object response = ClientSocketHelper.sendRequest("addNotification", notificationObject);
+
+        if (response instanceof Boolean) {
+            boolean success = (Boolean) response;
+            if (success) {
+                success_or_error_status.setFill(Color.GREEN);
+                success_or_error_status.setText("✔ Notification Sent");
+            } else {
+                success_or_error_status.setFill(Color.RED);
+                success_or_error_status.setText("⚠ Notification Already exists.");
+            }
+        } else {
+            success_or_error_status.setFill(Color.RED);
+            success_or_error_status.setText("Notifcation Failed");
+        }
 
         notification_by_responder_textbox.clear();
     }
