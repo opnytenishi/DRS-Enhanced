@@ -40,10 +40,6 @@ public class Login_and_signup_Controller implements Initializable, ILoginAndSign
     @FXML
     private PasswordField register_user_password;
     @FXML
-    private Button user_login_button;
-    @FXML
-    private Button register_public_user_button;
-    @FXML
     private Text login_alert_message;
     @FXML
     private Text register_public_user_alert_message;
@@ -116,34 +112,28 @@ public class Login_and_signup_Controller implements Initializable, ILoginAndSign
         }
 
         String fxmlFile = null;
-        String title = null;
 
         User loginUser;
 
         switch (selectedUserType) {
             case PUBLIC_USER:
                 fxmlFile = "public_user_page.fxml";
-                title = "DRS - Public User";
                 loginUser = new PublicUser();
                 break;
             case RESPONDER:
                 fxmlFile = "responder_page.fxml";
-                title = "DRS - Responder";
                 loginUser = new Responder();
                 break;
             case OTHER_DEPARTMENT:
                 fxmlFile = "other_department.fxml";
-                title = "DRS - Other Department";
                 loginUser = new Department();
                 break;
             case GUEST_USER:
                 fxmlFile = "public_user_page.fxml";
-                title = "DRS - Guest User";
                 loginUser = new PublicUser();
                 break;
             default:
                 fxmlFile = "public_user_page.fxml";
-                title = "DRS - Guest User";
                 loginUser = new PublicUser();
                 break;
         }
@@ -195,7 +185,7 @@ public class Login_and_signup_Controller implements Initializable, ILoginAndSign
                     case OTHER_DEPARTMENT:
                         break;
                     default:
-                        valid = false;
+                        break;
                 }
                 App.switchScene(root);
 

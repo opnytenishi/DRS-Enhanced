@@ -6,17 +6,14 @@ package com.drs.drs_enhanced.controller;
 
 import com.drs.drs_enhanced.App;
 import com.drs.drs_enhanced.view.IResponder;
-import java.io.IOException;
 import java.net.URL;
 import java.util.HashSet;
 import java.util.ResourceBundle;
 import java.util.Set;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.ListView;
@@ -26,7 +23,6 @@ import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
-import javafx.stage.Stage;
 
 /**
  * FXML Controller class
@@ -36,49 +32,33 @@ import javafx.stage.Stage;
 public class Responder_page_Controller implements Initializable, IResponder {
 
     @FXML
-    private Button responder_logout_button;
-    @FXML
     private Text success_or_error_status;
 
     @FXML
     private ListView<String> incidentList_for_assign_team;
     @FXML
     private ComboBox<String> assign_teamComboBox;
-    @FXML
-    private Button assign_team_proceedButton;
 
     @FXML
     private ListView<String> activeTeamList_for_supplies;
 
     @FXML
-    private Button add_new_supplies;
-    @FXML
     private TextField new_supplies_name;
     @FXML
     private ComboBox<String> select_supplies_list_combobox;
-    @FXML
-    private Button assign_supplies_proceed_button;
 
     @FXML
     private TextArea shelter_details_from_responder_textbox;
     @FXML
     private ComboBox<String> select_shelter_region_from_responder_combobox;
-    @FXML
-    private Button send_nearby_shelter_by_responder_button;
 
     @FXML
     private TextArea notification_by_responder_textbox;
-    @FXML
-    private Button send_notification_by_responder_button;
 
     @FXML
     private ComboBox<String> select_region_for_alerting_combobox;
     @FXML
-    private Button send_alert_to_selected_region_button;
-    @FXML
     private ComboBox<String> remove_selected_region_from_alerting_combobox;
-    @FXML
-    private Button remove_alert_selected_region_button;
 
     @FXML
     private TabPane tabPane;

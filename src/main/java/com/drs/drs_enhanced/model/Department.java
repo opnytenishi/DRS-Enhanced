@@ -1,6 +1,5 @@
 package com.drs.drs_enhanced.model;
 
-import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;

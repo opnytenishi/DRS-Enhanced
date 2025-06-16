@@ -31,7 +31,7 @@ public class ClientSocketHelper {
         return response;
 
     } catch (Exception e) {
-        e.printStackTrace();
+        System.out.println("Error: " + e.getMessage());
         return null;
     }
 }
