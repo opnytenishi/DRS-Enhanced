@@ -4,6 +4,7 @@ import com.drs.drs_enhanced.App;
 import com.drs.drs_enhanced.backend.ClientSocketHelper;
 import com.drs.drs_enhanced.model.Department;
 import com.drs.drs_enhanced.model.Incident;
+import com.drs.drs_enhanced.model.Shelter;
 import com.drs.drs_enhanced.model.Supply;
 import com.drs.drs_enhanced.view.IResponder;
 import java.net.URL;
@@ -88,8 +89,8 @@ public class Responder_page_Controller implements Initializable, IResponder {
         }
 
     }
-    
-    private void loadIncidents(){
+
+    private void loadIncidents() {
         Object response = ClientSocketHelper.sendRequest("getUnassignedIncidents", null);
         List<Incident> incidents = new ArrayList<>();
         if (response instanceof List<?>) {
@@ -100,7 +101,7 @@ public class Responder_page_Controller implements Initializable, IResponder {
                 }
             }
         }
-        
+
         ObservableList<Incident> observableIncidents = FXCollections.observableArrayList(incidents);
         incidentList_for_assign_team.setItems(observableIncidents);
         incidentList_for_assign_team.setCellFactory(list -> new ListCell<>() {
@@ -111,48 +112,48 @@ public class Responder_page_Controller implements Initializable, IResponder {
                     setText(null);
                 } else {
                     setText(incident.getIncidentType() + " in " + incident.getUser().getRegion()
-                           + "\nPriority " + incident.getPriorityLevel());
+                            + "\nPriority " + incident.getPriorityLevel());
                 }
             }
         });
 
     }
-    
+
     private void loadDepartments() {
         Object response = ClientSocketHelper.sendRequest("getAllDepartments", null);
-        
+
         List<Department> departments = new ArrayList<>();
         if (response instanceof List<?>) {
             List<?> rawList = (List<?>) response;
             for (Object obj : rawList) {
                 if (obj instanceof Department) {
-                    departments.add((Department)obj);
+                    departments.add((Department) obj);
                 }
             }
         }
-        
+
         ObservableList<Department> departmentList = FXCollections.observableArrayList(departments);
         assign_teamComboBox.setItems(departmentList);
         activeTeamList_for_supplies.setItems(departmentList);
     }
-    
+
     private void loadSupplies() {
         Object response = ClientSocketHelper.sendRequest("getAllSupplies", null);
-        
+
         List<Supply> supplies = new ArrayList<>();
         if (response instanceof List<?>) {
             List<?> rawList = (List<?>) response;
             for (Object obj : rawList) {
                 if (obj instanceof Supply) {
-                    supplies.add((Supply)obj);
+                    supplies.add((Supply) obj);
                 }
             }
         }
-        
+
         ObservableList<Supply> suppliesList = FXCollections.observableArrayList(supplies);
         select_supplies_list_combobox.setItems(suppliesList);
     }
-    
+
     @Override
     public void resetFields() {
         success_or_error_status.setText("");
@@ -177,7 +178,7 @@ public class Responder_page_Controller implements Initializable, IResponder {
     @FXML
     @Override
     public void handleAssignTeamToIncident() {
-        
+
         Incident selectedIncident = incidentList_for_assign_team.getSelectionModel().getSelectedItem();
         Department selectedTeam = assign_teamComboBox.getValue();
 
@@ -186,9 +187,9 @@ public class Responder_page_Controller implements Initializable, IResponder {
             success_or_error_status.setText("Please select both an incident and a team.");
             return;
         }
-        
+
         selectedIncident.setAssignedDepartment(selectedTeam);
-        
+
         Object response = ClientSocketHelper.sendRequest("assignTeamToIncident", selectedIncident);
         if (response instanceof Boolean && (Boolean) response) {
             success_or_error_status.setFill(Color.GREEN);
@@ -198,7 +199,7 @@ public class Responder_page_Controller implements Initializable, IResponder {
             success_or_error_status.setFill(Color.RED);
             success_or_error_status.setText("Assignment failed.");
         }
-        
+
     }
 
     @FXML
@@ -211,7 +212,7 @@ public class Responder_page_Controller implements Initializable, IResponder {
             success_or_error_status.setText("⚠ Please enter supply name.");
             return;
         }
-        
+
         Supply supply = new Supply(supplyName, null);
         Object response = ClientSocketHelper.sendRequest("addSupply", supply);
 
@@ -249,10 +250,25 @@ public class Responder_page_Controller implements Initializable, IResponder {
             success_or_error_status.setText("Please select a region.");
             return;
         }
-        success_or_error_status.setFill(Color.GREEN);
-        success_or_error_status.setText("✔ Shelter info sent for " + region + " region.");
+        Shelter shelter = new Shelter(details, region);
+        Object response = ClientSocketHelper.sendRequest("addShelter", shelter);
+
+        if (response instanceof Boolean) {
+            boolean success = (Boolean) response;
+            if (success) {
+                success_or_error_status.setFill(Color.GREEN);
+                success_or_error_status.setText("✔ Shelter info sent for " + region + " region.");
+            } else {
+                success_or_error_status.setFill(Color.RED);
+                success_or_error_status.setText("⚠ Shelter already exists.");
+            }
+        } else {
+            success_or_error_status.setFill(Color.RED);
+            success_or_error_status.setText("Submit Failed");
+        }
 
         shelter_details_from_responder_textbox.clear();
+  
     }
 
     @FXML
@@ -308,7 +324,7 @@ public class Responder_page_Controller implements Initializable, IResponder {
             data.put("deptId", dept.getUserId());
             data.put("supplyId", selectedSupply.getId());
             Object response = ClientSocketHelper.sendRequest("assignSupplyToTeam", data);
-            
+
             if (response instanceof Boolean) {
                 boolean success = (Boolean) response;
                 if (success) {
