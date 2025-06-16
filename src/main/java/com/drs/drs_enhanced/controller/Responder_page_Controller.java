@@ -52,22 +52,20 @@ public class Responder_page_Controller implements Initializable, IResponder {
     @FXML
     private TextArea shelter_details_from_responder_textbox;
     @FXML
-    private ComboBox<String> select_shelter_region_from_responder_combobox;
+    private ComboBox<Region> select_shelter_region_from_responder_combobox;
 
     @FXML
     private TextArea notification_by_responder_textbox;
 
     @FXML
-    private ComboBox<String> select_region_for_alerting_combobox;
+    private ComboBox<Region> select_region_for_alerting_combobox;
     @FXML
-    private ComboBox<String> remove_selected_region_from_alerting_combobox;
+    private ComboBox<Alert> remove_selected_region_from_alerting_combobox;
 
     @FXML
     private TabPane tabPane;
 
-    private final String[] regions = {
-        "NORTH", "SOUTH", "EAST", "WEST", "CENTRAL"
-    };
+
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -76,11 +74,10 @@ public class Responder_page_Controller implements Initializable, IResponder {
         loadIncidents();
         loadDepartments();
         loadSupplies();
-
+        loadAlerts();
         // Populate regions into ComboBoxes
-        select_region_for_alerting_combobox.getItems().addAll(regions);
-        select_shelter_region_from_responder_combobox.getItems().addAll(regions);
-        remove_selected_region_from_alerting_combobox.getItems().addAll(regions);
+        select_region_for_alerting_combobox.getItems().addAll(Region.values());
+        select_shelter_region_from_responder_combobox.getItems().addAll(Region.values());
 
         for (Tab tab : tabPane.getTabs()) {
             tab.setOnSelectionChanged(event -> {
@@ -154,6 +151,23 @@ public class Responder_page_Controller implements Initializable, IResponder {
 
         ObservableList<Supply> suppliesList = FXCollections.observableArrayList(supplies);
         select_supplies_list_combobox.setItems(suppliesList);
+    }
+
+    private void loadAlerts() {
+        Object response = ClientSocketHelper.sendRequest("getAllAlerts", null);
+
+        List<Alert> alerts = new ArrayList<>();
+        if (response instanceof List<?>) {
+            List<?> rawList = (List<?>) response;
+            for (Object obj : rawList) {
+                if (obj instanceof Alert) {
+                    alerts.add((Alert) obj);
+                }
+            }
+        }
+
+        ObservableList<Alert> alertList = FXCollections.observableArrayList(alerts);
+        remove_selected_region_from_alerting_combobox.setItems(alertList);
     }
 
     @Override
@@ -239,7 +253,7 @@ public class Responder_page_Controller implements Initializable, IResponder {
     @Override
     public void handleSendNearbyShelter() {
         String details = shelter_details_from_responder_textbox.getText().trim();
-        String region = select_shelter_region_from_responder_combobox.getValue();
+        Region region = select_shelter_region_from_responder_combobox.getValue();
 
         if (details.isEmpty()) {
             success_or_error_status.setFill(Color.RED);
@@ -247,12 +261,12 @@ public class Responder_page_Controller implements Initializable, IResponder {
             return;
         }
 
-        if (region == null || region.trim().isEmpty()) {
+        if (region == null || region.toString().isEmpty()) {
             success_or_error_status.setFill(Color.RED);
             success_or_error_status.setText("Please select a region.");
             return;
         }
-        Shelter shelter = new Shelter(details, region);
+        Shelter shelter = new Shelter(details, region.toString());
         Object response = ClientSocketHelper.sendRequest("addShelter", shelter);
 
         if (response instanceof Boolean) {
@@ -307,7 +321,7 @@ public class Responder_page_Controller implements Initializable, IResponder {
     @Override
     public void handleSendAlertToRegion() {
 
-        String selectedRegion = select_region_for_alerting_combobox.getValue();
+        Region selectedRegion = select_region_for_alerting_combobox.getValue();
 
         if (selectedRegion == null) {
             success_or_error_status.setFill(Color.RED);
@@ -315,7 +329,7 @@ public class Responder_page_Controller implements Initializable, IResponder {
             return;
         }
 
-        Alert alertObject = new Alert(selectedRegion);
+        Alert alertObject = new Alert(selectedRegion.toString());
         Object response = ClientSocketHelper.sendRequest("addAlert", alertObject);
 
         if (response instanceof Boolean) {
@@ -336,10 +350,17 @@ public class Responder_page_Controller implements Initializable, IResponder {
     @FXML
     @Override
     public void handleRemoveAlertFromRegion() {
-        String selectedRegion = remove_selected_region_from_alerting_combobox.getValue();
+        Alert selectedRegion = remove_selected_region_from_alerting_combobox.getValue();
         if (selectedRegion != null) {
-            success_or_error_status.setFill(Color.GREEN);
-            success_or_error_status.setText("✔ Alert removed from " + selectedRegion + " region.");
+            Object response = ClientSocketHelper.sendRequest("deleteAlert", selectedRegion);
+            if (response instanceof Boolean && (Boolean) response) {
+                success_or_error_status.setFill(Color.GREEN);
+                success_or_error_status.setText("✔ Alert removed from " + selectedRegion + " region.");
+                loadAlerts();
+            } else {
+                success_or_error_status.setFill(Color.RED);
+                success_or_error_status.setText("Alert failed to remove");
+            }
         } else {
             success_or_error_status.setFill(Color.RED);
             success_or_error_status.setText("⚠ Please select a region to remove alert.");

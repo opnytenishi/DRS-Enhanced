@@ -122,11 +122,12 @@ public class Public_user_page_Controller implements Initializable, IPublicUser {
                 alert_safe_danger.setText("Your in Danger Zone!");
             } else {
                 alert_safe_danger.setFill(Color.GREEN);                
-                alert_safe_danger.setText("Your in Danger Zone!");
+                alert_safe_danger.setText("Your in Safe Zone!");
             }
         }
     }
 
+    
     @FXML
     @Override
     public void handleRequestHelpButtonClick() {

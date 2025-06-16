@@ -16,6 +16,10 @@ import java.io.Serializable;
     @NamedQuery(
             name = "Alert.findByRegion",
             query = "SELECT a FROM Alert a WHERE a.alertRegion = :region"
+    ),
+    @NamedQuery(
+            name = "Alert.findAll",
+            query = "SELECT a FROM Alert a"
     )
 })
 public class Alert implements Serializable {
@@ -48,9 +52,9 @@ public class Alert implements Serializable {
     public void setId(Long id) {
         this.id = id;
     }
-   
+
     @Override
     public String toString() {
-        return "Alert{" + "alertRegion=" + alertRegion + '}';
+        return getAlertRegion();
     }
 }
