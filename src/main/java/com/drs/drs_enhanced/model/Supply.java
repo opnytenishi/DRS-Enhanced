@@ -1,23 +1,33 @@
 package com.drs.drs_enhanced.model;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToMany;
+import jakarta.persistence.NamedQueries;
+import jakarta.persistence.NamedQuery;
 import jakarta.persistence.Table;
+import java.io.Serializable;
 import java.util.List;
 
 @Entity
 @Table(name = "supplies")
-public class Supply{
+@NamedQueries({
+    @NamedQuery(
+        name = "Supply.findAll",
+        query = "SELECT s FROM Supply s"
+    )
+})
+public class Supply implements Serializable{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
+    
+    @Column(nullable = false, unique = true)
     private String name;
-    private int quantity;
 
     @ManyToMany(mappedBy = "supplies")
     private List<Department> departments;
@@ -25,10 +35,8 @@ public class Supply{
     public Supply() {
     }
 
-    public Supply(Long id, String name, int quantity, List<Department> departments) {
-        this.id = id;
+    public Supply(String name, List<Department> departments) {
         this.name = name;
-        this.quantity = quantity;
         this.departments = departments;
     }
 
@@ -48,14 +56,6 @@ public class Supply{
         this.name = name;
     }
 
-    public int getQuantity() {
-        return quantity;
-    }
-
-    public void setQuantity(int quantity) {
-        this.quantity = quantity;
-    }
-
     public List<Department> getDepartments() {
         return departments;
     }
@@ -66,7 +66,7 @@ public class Supply{
 
     @Override
     public String toString() {
-        return "Supply{" + "id=" + id + ", name=" + name + ", quantity=" + quantity + ", departments=" + departments + '}';
+        return getName();
     }
 
 }

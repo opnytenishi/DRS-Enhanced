@@ -81,7 +81,7 @@
                         <Separator layoutX="380.0" layoutY="170.0" prefWidth="200.0" />
                         <Separator layoutX="21.0" layoutY="170.0" prefWidth="200.0" />
                         <ComboBox fx:id="select_supplies_list_combobox" layoutX="93.0" layoutY="121.0" prefHeight="25.0" prefWidth="172.0" promptText="Assign Supplies" />
-                        <Button fx:id="assign_supplies_proceed_button" layoutX="342.0" layoutY="121.0" mnemonicParsing="false" onAction="#handleassign_suppliessuccess" prefHeight="25.0" prefWidth="171.0" text="Proceed" />
+                        <Button fx:id="assign_supplies_proceed_button" layoutX="342.0" layoutY="121.0" mnemonicParsing="false" onAction="#handleassign_supplies" prefHeight="25.0" prefWidth="171.0" text="Proceed" />
                         <ListView fx:id="activeTeamList_for_supplies" layoutX="9.0" layoutY="28.0" prefHeight="82.0" prefWidth="584.0" />
                       </children>
                     </AnchorPane>
@@ -135,6 +135,6 @@
                 </Tab>
             </tabs>
         </TabPane>
-      <AnchorPane prefHeight="200.0" prefWidth="200.0" />
+      <AnchorPane prefHeight="75.0" prefWidth="125.0" />
     </children>
 </AnchorPane>

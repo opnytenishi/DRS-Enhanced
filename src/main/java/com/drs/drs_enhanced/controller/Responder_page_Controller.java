@@ -4,13 +4,14 @@ import com.drs.drs_enhanced.App;
 import com.drs.drs_enhanced.backend.ClientSocketHelper;
 import com.drs.drs_enhanced.model.Department;
 import com.drs.drs_enhanced.model.Incident;
+import com.drs.drs_enhanced.model.Supply;
 import com.drs.drs_enhanced.view.IResponder;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.HashSet;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.ResourceBundle;
-import java.util.Set;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -43,7 +44,7 @@ public class Responder_page_Controller implements Initializable, IResponder {
     @FXML
     private TextField new_supplies_name;
     @FXML
-    private ComboBox<String> select_supplies_list_combobox;
+    private ComboBox<Supply> select_supplies_list_combobox;
 
     @FXML
     private TextArea shelter_details_from_responder_textbox;
@@ -61,15 +62,9 @@ public class Responder_page_Controller implements Initializable, IResponder {
     @FXML
     private TabPane tabPane;
 
-    private final String[] fakeTeams = {
-        "Team Alpha", "Team Bravo", "Team Charlie"
-    };
-
     private final String[] regions = {
         "NORTH", "SOUTH", "EAST", "WEST", "CENTRAL"
     };
-
-    private final Set<String> supplyNamesSet = new HashSet<>();
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -77,6 +72,7 @@ public class Responder_page_Controller implements Initializable, IResponder {
 
         loadIncidents();
         loadDepartments();
+        loadSupplies();
 
         // Populate regions into ComboBoxes
         select_region_for_alerting_combobox.getItems().addAll(regions);
@@ -140,6 +136,23 @@ public class Responder_page_Controller implements Initializable, IResponder {
         activeTeamList_for_supplies.setItems(departmentList);
     }
     
+    private void loadSupplies() {
+        Object response = ClientSocketHelper.sendRequest("getAllSupplies", null);
+        
+        List<Supply> supplies = new ArrayList<>();
+        if (response instanceof List<?>) {
+            List<?> rawList = (List<?>) response;
+            for (Object obj : rawList) {
+                if (obj instanceof Supply) {
+                    supplies.add((Supply)obj);
+                }
+            }
+        }
+        
+        ObservableList<Supply> suppliesList = FXCollections.observableArrayList(supplies);
+        select_supplies_list_combobox.setItems(suppliesList);
+    }
+    
     @Override
     public void resetFields() {
         success_or_error_status.setText("");
@@ -195,22 +208,27 @@ public class Responder_page_Controller implements Initializable, IResponder {
 
         if (supplyName.isEmpty()) {
             success_or_error_status.setFill(Color.RED);
-            success_or_error_status.setText("⚠ Please enter supplies details.");
+            success_or_error_status.setText("⚠ Please enter supply name.");
             return;
         }
+        
+        Supply supply = new Supply(supplyName, null);
+        Object response = ClientSocketHelper.sendRequest("addSupply", supply);
 
-        String fullSupply = supplyName;
-
-        if (!supplyNamesSet.contains(fullSupply)) {
-            select_supplies_list_combobox.getItems().add(fullSupply);
-            supplyNamesSet.add(fullSupply);
-            success_or_error_status.setFill(Color.GREEN);
-            success_or_error_status.setText("✔ Supply added successfully.");
+        if (response instanceof Boolean) {
+            boolean success = (Boolean) response;
+            if (success) {
+                success_or_error_status.setFill(Color.GREEN);
+                success_or_error_status.setText("✔ Supply added successfully.");
+            } else {
+                success_or_error_status.setFill(Color.RED);
+                success_or_error_status.setText("⚠ Supply already exists.");
+            }
         } else {
-            success_or_error_status.setFill(Color.GREEN);
-            success_or_error_status.setText("⚠ Supply already exists.");
+            success_or_error_status.setFill(Color.RED);
+            success_or_error_status.setText("Submit Failed");
         }
-
+        loadSupplies();
         new_supplies_name.clear();
     }
 
@@ -281,8 +299,32 @@ public class Responder_page_Controller implements Initializable, IResponder {
 
     @FXML
     @Override
-    public void handleassign_suppliessuccess() {
-        success_or_error_status.setFill(Color.GREEN);
-        success_or_error_status.setText("✔ Supplies assigned successfully.");
+    public void handleassign_supplies() {
+        Department dept = activeTeamList_for_supplies.getSelectionModel().getSelectedItem();
+        Supply selectedSupply = select_supplies_list_combobox.getValue();
+
+        if (dept != null && selectedSupply != null) {
+            Map<String, Long> data = new HashMap<>();
+            data.put("deptId", dept.getUserId());
+            data.put("supplyId", selectedSupply.getId());
+            Object response = ClientSocketHelper.sendRequest("assignSupplyToTeam", data);
+            
+            if (response instanceof Boolean) {
+                boolean success = (Boolean) response;
+                if (success) {
+                    success_or_error_status.setFill(Color.GREEN);
+                    success_or_error_status.setText("✔ Supply assigned successfully.");
+                } else {
+                    success_or_error_status.setFill(Color.RED);
+                    success_or_error_status.setText("⚠ Supply Already Assigned.");
+                }
+            } else {
+                success_or_error_status.setFill(Color.RED);
+                success_or_error_status.setText("Assignment Failed.");
+            }
+        } else {
+            success_or_error_status.setFill(Color.RED);
+            success_or_error_status.setText("Please select both a team and a supply.");
+        }
     }
 }

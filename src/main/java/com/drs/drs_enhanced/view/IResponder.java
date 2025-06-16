@@ -7,7 +7,7 @@ public interface IResponder {
     public void handleAddNewSupply();
     public void handleSendAlertToRegion();
     public void handleRemoveAlertFromRegion();
-    public void handleassign_suppliessuccess();
+    public void handleassign_supplies();
     public void handleSendNearbyShelter();
     public void handleSendNotification();
 }
