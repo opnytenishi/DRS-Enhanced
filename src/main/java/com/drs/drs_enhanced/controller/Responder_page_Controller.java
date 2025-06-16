@@ -1,12 +1,10 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/javafx/FXMLController.java to edit this template
- */
 package com.drs.drs_enhanced.controller;
 
 import com.drs.drs_enhanced.App;
 import com.drs.drs_enhanced.backend.ClientSocketHelper;
+import com.drs.drs_enhanced.model.Department;
 import com.drs.drs_enhanced.model.Incident;
+import com.drs.drs_enhanced.model.User;
 import com.drs.drs_enhanced.view.IResponder;
 import java.net.URL;
 import java.util.ArrayList;
@@ -77,6 +75,25 @@ public class Responder_page_Controller implements Initializable, IResponder {
     public void initialize(URL url, ResourceBundle rb) {
         success_or_error_status.setText("");
 
+        loadIncidents();
+        loadDepartments();
+
+        // Populate regions into ComboBoxes
+        select_region_for_alerting_combobox.getItems().addAll(regions);
+        select_shelter_region_from_responder_combobox.getItems().addAll(regions);
+        remove_selected_region_from_alerting_combobox.getItems().addAll(regions);
+
+        for (Tab tab : tabPane.getTabs()) {
+            tab.setOnSelectionChanged(event -> {
+                if (tab.isSelected()) {
+                    resetFields();  // Reset inputs when a tab is selected
+                }
+            });
+        }
+
+    }
+    
+    private void loadIncidents(){
         Object response = ClientSocketHelper.sendRequest("getUnassignedIncidents", null);
         List<Incident> incidents = new ArrayList<>();
         if (response instanceof List<?>) {
@@ -94,29 +111,29 @@ public class Responder_page_Controller implements Initializable, IResponder {
                            + "\nPriority " + i.getPriorityLevel();
             displayStrings.add(display);
         }
+        
         incidentList_for_assign_team.setItems(displayStrings);
-
-        // Populate teams into ComboBox and ListView
-        for (String team : fakeTeams) {
-            assign_teamComboBox.getItems().add(team);
-            activeTeamList_for_supplies.getItems().add(team);
-        }
-
-        // Populate regions into ComboBoxes
-        select_region_for_alerting_combobox.getItems().addAll(regions);
-        select_shelter_region_from_responder_combobox.getItems().addAll(regions);
-        remove_selected_region_from_alerting_combobox.getItems().addAll(regions);
-
-        for (Tab tab : tabPane.getTabs()) {
-            tab.setOnSelectionChanged(event -> {
-                if (tab.isSelected()) {
-                    resetFields();  // Reset inputs when a tab is selected
-                }
-            });
-        }
-
     }
+    
+    private void loadDepartments() {
+        Object response = ClientSocketHelper.sendRequest("getAllDepartments", null);
 
+        if (response instanceof List<?>) {
+            List<?> rawList = (List<?>) response;
+
+            List<String> departmentNames = new ArrayList<>();
+
+            for (Object obj : rawList) {
+                if (obj instanceof Department) {
+                    departmentNames.add(((Department)obj).getDepartmentName());
+                }
+            }
+            
+            assign_teamComboBox.setItems(FXCollections.observableArrayList(departmentNames));
+            activeTeamList_for_supplies.setItems(FXCollections.observableArrayList(departmentNames));
+        }
+    }
+    
     @Override
     public void resetFields() {
         success_or_error_status.setText("");

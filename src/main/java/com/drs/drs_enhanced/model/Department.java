@@ -4,11 +4,19 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
+import jakarta.persistence.NamedQueries;
+import jakarta.persistence.NamedQuery;
 import jakarta.persistence.Table;
 import java.util.List;
 
 @Entity
 @Table(name = "departments")
+@NamedQueries({
+    @NamedQuery(
+        name = "Department.findAll",
+        query = "SELECT d FROM Department d"
+    )
+})
 public class Department extends User{
 
     private String departmentName;
