@@ -4,7 +4,6 @@ import com.drs.drs_enhanced.App;
 import com.drs.drs_enhanced.backend.ClientSocketHelper;
 import com.drs.drs_enhanced.model.Department;
 import com.drs.drs_enhanced.model.Incident;
-import com.drs.drs_enhanced.model.User;
 import com.drs.drs_enhanced.view.IResponder;
 import java.net.URL;
 import java.util.ArrayList;
@@ -19,6 +18,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.control.ComboBox;
+import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
@@ -33,12 +33,12 @@ public class Responder_page_Controller implements Initializable, IResponder {
     private Text success_or_error_status;
 
     @FXML
-    private ListView<String> incidentList_for_assign_team;
+    private ListView<Incident> incidentList_for_assign_team;
     @FXML
-    private ComboBox<String> assign_teamComboBox;
+    private ComboBox<Department> assign_teamComboBox;
 
     @FXML
-    private ListView<String> activeTeamList_for_supplies;
+    private ListView<Department> activeTeamList_for_supplies;
 
     @FXML
     private TextField new_supplies_name;
@@ -105,33 +105,39 @@ public class Responder_page_Controller implements Initializable, IResponder {
             }
         }
         
-        ObservableList<String> displayStrings = FXCollections.observableArrayList();
-        for (Incident i : incidents) {
-            String display = i.getIncidentType() + " in " + i.getUser().getRegion()
-                           + "\nPriority " + i.getPriorityLevel();
-            displayStrings.add(display);
-        }
-        
-        incidentList_for_assign_team.setItems(displayStrings);
+        ObservableList<Incident> observableIncidents = FXCollections.observableArrayList(incidents);
+        incidentList_for_assign_team.setItems(observableIncidents);
+        incidentList_for_assign_team.setCellFactory(list -> new ListCell<>() {
+            @Override
+            protected void updateItem(Incident incident, boolean empty) {
+                super.updateItem(incident, empty);
+                if (empty || incident == null) {
+                    setText(null);
+                } else {
+                    setText(incident.getIncidentType() + " in " + incident.getUser().getRegion()
+                           + "\nPriority " + incident.getPriorityLevel());
+                }
+            }
+        });
+
     }
     
     private void loadDepartments() {
         Object response = ClientSocketHelper.sendRequest("getAllDepartments", null);
-
+        
+        List<Department> departments = new ArrayList<>();
         if (response instanceof List<?>) {
             List<?> rawList = (List<?>) response;
-
-            List<String> departmentNames = new ArrayList<>();
-
             for (Object obj : rawList) {
                 if (obj instanceof Department) {
-                    departmentNames.add(((Department)obj).getDepartmentName());
+                    departments.add((Department)obj);
                 }
             }
-            
-            assign_teamComboBox.setItems(FXCollections.observableArrayList(departmentNames));
-            activeTeamList_for_supplies.setItems(FXCollections.observableArrayList(departmentNames));
         }
+        
+        ObservableList<Department> departmentList = FXCollections.observableArrayList(departments);
+        assign_teamComboBox.setItems(departmentList);
+        activeTeamList_for_supplies.setItems(departmentList);
     }
     
     @Override
@@ -158,14 +164,28 @@ public class Responder_page_Controller implements Initializable, IResponder {
     @FXML
     @Override
     public void handleAssignTeamToIncident() {
-        String selectedTeam = assign_teamComboBox.getValue();
-        if (selectedTeam != null) {
+        
+        Incident selectedIncident = incidentList_for_assign_team.getSelectionModel().getSelectedItem();
+        Department selectedTeam = assign_teamComboBox.getValue();
+
+        if (selectedIncident == null || selectedTeam == null) {
+            success_or_error_status.setFill(Color.RED);
+            success_or_error_status.setText("Please select both an incident and a team.");
+            return;
+        }
+        
+        selectedIncident.setAssignedDepartment(selectedTeam);
+        
+        Object response = ClientSocketHelper.sendRequest("assignTeamToIncident", selectedIncident);
+        if (response instanceof Boolean && (Boolean) response) {
             success_or_error_status.setFill(Color.GREEN);
-            success_or_error_status.setText("✔ " + selectedTeam + " assigned to the incident successfully.");
+            success_or_error_status.setText("✔ " + selectedTeam.getDepartmentName() + " assigned to the incident successfully.");
+            loadIncidents();
         } else {
             success_or_error_status.setFill(Color.RED);
-            success_or_error_status.setText("⚠ Please select a team to assign.");
+            success_or_error_status.setText("Assignment failed.");
         }
+        
     }
 
     @FXML

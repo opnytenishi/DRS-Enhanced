@@ -56,8 +56,7 @@ public class Department extends User{
 
     @Override
     public String toString() {
-        return "Department{" + "departmentName=" + departmentName + 
-                ", supplies=" + supplies + '}';
+        return getDepartmentName();
     }
     
 }

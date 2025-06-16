@@ -52,7 +52,7 @@
                         <Label layoutX="258.0" layoutY="6.0" text="Select Incident" />
 
                         <Label layoutX="40.0" layoutY="246.0" text="Assign Team:" />
-                        <ComboBox fx:id="assign_teamComboBox" layoutX="140.0" layoutY="241.0" onAction="#handleAssignTeamToIncident" prefWidth="300.0" promptText="Select team" />
+                        <ComboBox fx:id="assign_teamComboBox" layoutX="140.0" layoutY="241.0" prefWidth="300.0" promptText="Select team" />
 
                         <Button fx:id="assign_team_proceedButton" layoutX="460.0" layoutY="241.0" onAction="#handleAssignTeamToIncident" prefWidth="100.0" text="Proceed" />
                         <ListView fx:id="incidentList_for_assign_team" layoutX="8.0" layoutY="23.0" prefHeight="200.0" prefWidth="584.0" />
@@ -135,5 +135,6 @@
                 </Tab>
             </tabs>
         </TabPane>
+      <AnchorPane prefHeight="200.0" prefWidth="200.0" />
     </children>
 </AnchorPane>
