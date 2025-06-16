@@ -14,8 +14,8 @@ import java.io.Serializable;
 @Table(name = "alert")
 @NamedQueries({
     @NamedQuery(
-            name = "Alert.findAll",
-            query = "SELECT a FROM Alert a"
+            name = "Alert.findByRegion",
+            query = "SELECT a FROM Alert a WHERE a.alertRegion = :region"
     )
 })
 public class Alert implements Serializable {

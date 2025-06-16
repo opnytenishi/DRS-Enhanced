@@ -76,7 +76,7 @@ public class Responder_page_Controller implements Initializable, IResponder {
         loadIncidents();
         loadDepartments();
         loadSupplies();
-        
+
         // Populate regions into ComboBoxes
         select_region_for_alerting_combobox.getItems().addAll(regions);
         select_shelter_region_from_responder_combobox.getItems().addAll(regions);
@@ -306,8 +306,14 @@ public class Responder_page_Controller implements Initializable, IResponder {
     @FXML
     @Override
     public void handleSendAlertToRegion() {
-        
+
         String selectedRegion = select_region_for_alerting_combobox.getValue();
+
+        if (selectedRegion == null) {
+            success_or_error_status.setFill(Color.RED);
+            success_or_error_status.setText("⚠ Please select a region to alert.");
+            return;
+        }
 
         Alert alertObject = new Alert(selectedRegion);
         Object response = ClientSocketHelper.sendRequest("addAlert", alertObject);
@@ -319,7 +325,7 @@ public class Responder_page_Controller implements Initializable, IResponder {
                 success_or_error_status.setText("✔ Alert sent to " + selectedRegion + " region.");
             } else {
                 success_or_error_status.setFill(Color.RED);
-                success_or_error_status.setText("⚠ Please select a region to alert.");
+                success_or_error_status.setText("⚠ Please select a different region to alert.");
             }
         } else {
             success_or_error_status.setFill(Color.RED);

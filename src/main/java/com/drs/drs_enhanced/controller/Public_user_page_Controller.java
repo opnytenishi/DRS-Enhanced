@@ -55,6 +55,7 @@ public class Public_user_page_Controller implements Initializable, IPublicUser {
         this.loggedInUser = loggedInUser;
         if (this.loggedInUser != null) {
             loadShelters();
+            loadAlertByRegion();
         }
     }
 
@@ -110,6 +111,20 @@ public class Public_user_page_Controller implements Initializable, IPublicUser {
 
         ObservableList<Notification> notificationList = FXCollections.observableArrayList(notifications);
         public_notifications_list.setItems(notificationList);
+    }
+
+    private void loadAlertByRegion() {
+        Object response = ClientSocketHelper.sendRequest("regionAlert",loggedInUser.getRegion() );
+        if (response instanceof Boolean){
+            boolean alert = (Boolean) response;
+            if (alert){
+                alert_safe_danger.setFill(Color.RED);                
+                alert_safe_danger.setText("Your in Danger Zone!");
+            } else {
+                alert_safe_danger.setFill(Color.GREEN);                
+                alert_safe_danger.setText("Your in Danger Zone!");
+            }
+        }
     }
 
     @FXML
