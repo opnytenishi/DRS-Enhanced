@@ -3,9 +3,12 @@ package com.drs.drs_enhanced.controller;
 import com.drs.drs_enhanced.App;
 import com.drs.drs_enhanced.backend.ClientSocketHelper;
 import com.drs.drs_enhanced.model.Incident;
+import com.drs.drs_enhanced.model.Shelter;
 import com.drs.drs_enhanced.model.User;
 import com.drs.drs_enhanced.view.IPublicUser;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 import javafx.util.Duration;
 import java.util.ResourceBundle;
 import javafx.animation.PauseTransition;
@@ -37,23 +40,26 @@ public class Public_user_page_Controller implements Initializable, IPublicUser {
     private Button public_user_request_help;
 
     @FXML
-    private ListView<String> shelter_list;
+    private ListView<Shelter> shelter_list;
 
     @FXML
     private ListView<String> public_notifications_list;
 
     @FXML
     private Text public_user_status_message_text_field;
-    
+
     private User loggedInUser;
-    
+
     public void setLoggedInUser(User loggedInUser) {
         this.loggedInUser = loggedInUser;
+        if (this.loggedInUser != null){
+            loadShelters();
+        }
     }
-    
+
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        
+
         // Incident types dropdown
         public_user_status_message_text_field.setText("");
 
@@ -68,17 +74,6 @@ public class Public_user_page_Controller implements Initializable, IPublicUser {
                 "Landslide"
         );
         public_user_incident_type.setItems(incidentTypes);
-
-        // Fake shelter list
-        ObservableList<String> shelters = FXCollections.observableArrayList(
-                "Shelter A - North High School Gym",
-                "Shelter B - Central Community Center",
-                "Shelter C - South Park Hall",
-                "Shelter D - East Emergency Zone",
-                "Shelter E - West Town Stadium"
-        );
-        shelter_list.setItems(shelters);
-
         // Default notifications
         ObservableList<String> default_notification = FXCollections.observableArrayList(
                 "Flood warning in Region A",
@@ -86,6 +81,23 @@ public class Public_user_page_Controller implements Initializable, IPublicUser {
                 "Emergency shelter open in Region C"
         );
         public_notifications_list.setItems(default_notification);
+    }
+
+    private void loadShelters() {
+        Object response = ClientSocketHelper.sendRequest("getAllShelters", loggedInUser.getRegion());
+
+        List<Shelter> shelters = new ArrayList<>();
+        if (response instanceof List<?>) {
+            List<?> rawList = (List<?>) response;
+            for (Object obj : rawList) {
+                if (obj instanceof Shelter) {
+                    shelters.add((Shelter) obj);
+                }
+            }
+        }
+
+        ObservableList<Shelter> shelterList = FXCollections.observableArrayList(shelters);
+        shelter_list.setItems(shelterList);
     }
 
     @FXML
@@ -98,8 +110,7 @@ public class Public_user_page_Controller implements Initializable, IPublicUser {
             public_user_status_message_text_field.setFill(Color.RED);
             public_user_status_message_text_field.setText("Please fill all details");
         } else {
-            
-            
+
             Incident incident = new Incident(selectedIncident, description, 0, loggedInUser, null);
             Object response = ClientSocketHelper.sendRequest("sendHelp", incident);
 
@@ -122,7 +133,7 @@ public class Public_user_page_Controller implements Initializable, IPublicUser {
             public_user_request_help.setDisable(true);
 
             // Timer to re-enable inputs (2 hours = 7200 seconds)
-            PauseTransition enableInputsTimer = new PauseTransition(Duration.seconds(30));  
+            PauseTransition enableInputsTimer = new PauseTransition(Duration.seconds(30));
             enableInputsTimer.setOnFinished(event -> {
                 public_user_incident_type.setDisable(false);
                 public_user_description.setDisable(false);

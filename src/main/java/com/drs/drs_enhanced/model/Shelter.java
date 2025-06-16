@@ -15,7 +15,7 @@ import java.io.Serializable;
 @NamedQueries({
     @NamedQuery(
             name = "Shelter.findAll",
-            query = "SELECT s FROM Shelter s"
+            query = "SELECT s FROM Shelter s WHERE s.region = :region"
     )
 })
 public class Shelter implements Serializable {
@@ -61,7 +61,7 @@ public class Shelter implements Serializable {
 
     @Override
     public String toString() {
-        return "Shelter{" + "id=" + id + ", shelterDetail=" + shelterDetail + ", region=" + region + '}';
+        return getShelterDetail() ;
     }
 
     
