@@ -15,8 +15,6 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
-
-import javafx.scene.control.Button;
 import javafx.scene.control.TextArea;
 import javafx.scene.text.Text;
 
@@ -25,8 +23,6 @@ public class Other_Department_PageController implements Initializable, IOtherDep
     @FXML
     private Text department_name;
     @FXML
-    private Button department_logout_button;
-    @FXML
     private Text department_status_message;
     @FXML
     private TextArea assigned_task_textarea;
@@ -34,8 +30,6 @@ public class Other_Department_PageController implements Initializable, IOtherDep
     private TextArea incident_details_textarea;
     @FXML
     private TextArea supplies_details_textarea;
-    @FXML
-    private Button mark_as_completed_button;
 
     private User loggedInUser;
 
@@ -76,14 +70,14 @@ public class Other_Department_PageController implements Initializable, IOtherDep
         response = ClientSocketHelper.sendRequest("getSuppliesForDepartment", deptId);
 
         if (response instanceof List<?>) {
-            List<Supply> supplies = new ArrayList<>();
+            String supplies = "";
             for (Object obj : (List<?>) response) {
                 if (obj instanceof Supply) {
-                    supplies.add((Supply)obj);
+                    supplies += ((Supply)obj).getName();
                 }
             }
 
-            supplies_details_textarea.setText(supplies.toString());
+            supplies_details_textarea.setText(supplies);
         }
     }
 
