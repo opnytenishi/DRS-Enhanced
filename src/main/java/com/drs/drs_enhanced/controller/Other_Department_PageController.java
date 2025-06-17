@@ -15,6 +15,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
+import javafx.scene.control.Button;
 import javafx.scene.control.TextArea;
 import javafx.scene.text.Text;
 
@@ -30,13 +31,21 @@ public class Other_Department_PageController implements Initializable, IOtherDep
     private TextArea incident_details_textarea;
     @FXML
     private TextArea supplies_details_textarea;
+    @FXML
+    private Button previous_button;
+    @FXML
+    private Button next_button;
 
     private User loggedInUser;
+
+    private List<Incident> assignedIncidents = new ArrayList<>();
+    private int currentIncidentIndex = 0;
 
     public void setLoggedInUser(User loggedInUser) {
         this.loggedInUser = loggedInUser;
         if (this.loggedInUser != null) {
             loadAssignedIncidents();
+            displaySupplies();
         }
     }
 
@@ -47,37 +56,64 @@ public class Other_Department_PageController implements Initializable, IOtherDep
     }
 
     private void loadAssignedIncidents() {
-        Long deptId = ((Department) loggedInUser).getUserId();
-        Object response = ClientSocketHelper.sendRequest("getIncidentsForDepartment", deptId);
+        Object response = ClientSocketHelper.sendRequest("getIncidentsForDepartment", loggedInUser.getUserId());
 
         if (response instanceof List<?>) {
-            List<Incident> incidents = new ArrayList<>();
+            assignedIncidents.clear();
 
             for (Object obj : (List<?>) response) {
                 if (obj instanceof Incident) {
-                    incidents.add((Incident) obj);
+                    assignedIncidents.add((Incident) obj);
                 }
             }
 
-            if (!incidents.isEmpty()) {
-                Incident firstIncident = incidents.get(0);
-                assigned_task_textarea.setText(firstIncident.getIncidentType());
-                incident_details_textarea.setText(firstIncident.getDescription());
-
-                
-            }
+            currentIncidentIndex = 0;
+            displayIncident(currentIncidentIndex);
         }
-        response = ClientSocketHelper.sendRequest("getSuppliesForDepartment", deptId);
+
+    }
+
+    private void displaySupplies() {
+        Object response = ClientSocketHelper.sendRequest("getSuppliesForDepartment", loggedInUser.getUserId());
 
         if (response instanceof List<?>) {
             String supplies = "";
             for (Object obj : (List<?>) response) {
                 if (obj instanceof Supply) {
-                    supplies += ((Supply)obj).getName();
+                    supplies += ((Supply) obj).getName() + "\n";
                 }
             }
 
             supplies_details_textarea.setText(supplies);
+        }
+    }
+
+    private void displayIncident(int index) {
+        if (assignedIncidents.isEmpty()) {
+            return;
+        }
+
+        Incident incident = assignedIncidents.get(index);
+
+        assigned_task_textarea.setText(incident.getIncidentType());
+        incident_details_textarea.setText(incident.getDescription());
+        previous_button.setDisable(currentIncidentIndex == 0);
+        next_button.setDisable(currentIncidentIndex == assignedIncidents.size() - 1);
+    }
+
+    @FXML
+    private void handleNextIncident() {
+        if (currentIncidentIndex < assignedIncidents.size() - 1) {
+            currentIncidentIndex++;
+            displayIncident(currentIncidentIndex);
+        }
+    }
+
+    @FXML
+    private void handlePreviousIncident() {
+        if (currentIncidentIndex > 0) {
+            currentIncidentIndex--;
+            displayIncident(currentIncidentIndex);
         }
     }
 
@@ -109,6 +145,9 @@ public class Other_Department_PageController implements Initializable, IOtherDep
     @FXML
     @Override
     public void handleReload() {
-        // Add the load handlers here.
+        if (this.loggedInUser != null) {
+            loadAssignedIncidents();
+            displaySupplies();
+        }
     }
 }

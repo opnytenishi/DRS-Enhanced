@@ -56,7 +56,7 @@
         <!-- Mark as Completed Button -->
         <Button fx:id="mark_as_completed_button" layoutX="450.0" layoutY="355.0" onAction="#handleMarkAsCompleted" text="Mark as Completed" />
       <Button fx:id="reload_button" layoutX="208.0" layoutY="50.0" mnemonicParsing="false" onAction="#handleReload" text="🔄" />
-      <Button fx:id="previous_button" layoutX="20.0" layoutY="355.0" mnemonicParsing="false" text="&lt;-- Previous" />
-      <Button fx:id="next_button" layoutX="121.0" layoutY="355.0" mnemonicParsing="false" text="Next --&gt;" />
+      <Button fx:id="previous_button" onAction="#handlePreviousIncident" layoutX="20.0" layoutY="355.0" mnemonicParsing="false" text="&lt;-- Previous" />
+      <Button fx:id="next_button" onAction="#handleNextIncident" layoutX="121.0" layoutY="355.0" mnemonicParsing="false" text="Next --&gt;" />
     </children>
 </AnchorPane>
