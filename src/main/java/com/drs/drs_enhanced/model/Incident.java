@@ -17,7 +17,11 @@ import java.io.Serializable;
     @NamedQuery(
         name = "Incident.findUnassigned",
         query = "SELECT i FROM Incident i WHERE i.assignedDepartment IS NULL"
-    )
+    ),
+    @NamedQuery(
+    name = "Incident.findByDepartmentId",
+    query = "SELECT i FROM Incident i WHERE i.assignedDepartment.userId = :deptId"
+)
 })
 public class Incident implements Serializable {
     
