@@ -11,7 +11,6 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
-import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.Tab;
@@ -128,10 +127,6 @@ public class Login_and_signup_Controller implements Initializable, ILoginAndSign
                 fxmlFile = "other_department.fxml";
                 loginUser = new Department();
                 break;
-            case GUEST_USER:
-                fxmlFile = "public_user_page.fxml";
-                loginUser = new PublicUser();
-                break;
             default:
                 fxmlFile = "public_user_page.fxml";
                 loginUser = new PublicUser();
@@ -151,7 +146,6 @@ public class Login_and_signup_Controller implements Initializable, ILoginAndSign
 
             switch (selectedUserType) {
                 case PUBLIC_USER:
-                case GUEST_USER:
                     valid = loggedInUser instanceof PublicUser;
                     break;
                 case RESPONDER:

@@ -1,8 +1,7 @@
 package com.drs.drs_enhanced.controller;
 
 public enum UserType {
-    PUBLIC_USER("Public User"), 
-    GUEST_USER("Guest User"), 
+    PUBLIC_USER("Public User"),
     RESPONDER("Responder"), 
     OTHER_DEPARTMENT("Other Department");
 
