@@ -1,15 +1,12 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Interface.java to edit this template
- */
 package com.drs.drs_enhanced.view;
 
-/**
- *
- * @author opnyt
- */
+import com.drs.drs_enhanced.model.User;
+
 public interface IOtherDepartment {
+    public void setLoggedInUser(User loggedInUser);
     public void handleMarkAsCompleted();
     public void handleLogoutFrom_department();
     public void handleReload();
+    public void handleNextIncident();
+    public void handlePreviousIncident();
 }

@@ -2,7 +2,6 @@ package com.drs.drs_enhanced.controller;
 
 import com.drs.drs_enhanced.App;
 import com.drs.drs_enhanced.backend.ClientSocketHelper;
-import com.drs.drs_enhanced.model.Department;
 import com.drs.drs_enhanced.model.Incident;
 import com.drs.drs_enhanced.model.Supply;
 import com.drs.drs_enhanced.model.User;
@@ -41,6 +40,7 @@ public class Other_Department_PageController implements Initializable, IOtherDep
     private List<Incident> assignedIncidents = new ArrayList<>();
     private int currentIncidentIndex = 0;
 
+    @Override
     public void setLoggedInUser(User loggedInUser) {
         this.loggedInUser = loggedInUser;
         if (this.loggedInUser != null) {
@@ -102,7 +102,8 @@ public class Other_Department_PageController implements Initializable, IOtherDep
     }
 
     @FXML
-    private void handleNextIncident() {
+    @Override
+    public void handleNextIncident() {
         if (currentIncidentIndex < assignedIncidents.size() - 1) {
             currentIncidentIndex++;
             displayIncident(currentIncidentIndex);
@@ -110,7 +111,8 @@ public class Other_Department_PageController implements Initializable, IOtherDep
     }
 
     @FXML
-    private void handlePreviousIncident() {
+    @Override
+    public void handlePreviousIncident() {
         if (currentIncidentIndex > 0) {
             currentIncidentIndex--;
             displayIncident(currentIncidentIndex);

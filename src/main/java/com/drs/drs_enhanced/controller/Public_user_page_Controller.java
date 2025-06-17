@@ -21,6 +21,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
+import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextArea;
 import javafx.scene.paint.Color;
@@ -54,6 +55,7 @@ public class Public_user_page_Controller implements Initializable, IPublicUser {
 
     private User loggedInUser;
 
+    @Override
     public void setLoggedInUser(User loggedInUser) {
         this.loggedInUser = loggedInUser;
         if (this.loggedInUser != null) {
@@ -70,6 +72,19 @@ public class Public_user_page_Controller implements Initializable, IPublicUser {
 
         public_user_incident_type.getItems().setAll(IncidentType.values());
         loadNotifications();
+    }
+    
+    @Override
+    public void resetFields() {
+        public_user_description.setText("");
+        public_user_incident_type.getSelectionModel().clearSelection();
+        public_user_incident_type.setButtonCell(new ListCell<>() {
+            @Override
+            protected void updateItem(IncidentType item, boolean empty) {
+                super.updateItem(item, empty);
+                setText(empty || item == null ? "Incident Type" : item.toString());
+            }
+        });
     }
 
     private void loadShelters() {
@@ -160,6 +175,7 @@ public class Public_user_page_Controller implements Initializable, IPublicUser {
                 public_user_incident_type.setDisable(false);
                 public_user_description.setDisable(false);
                 public_user_request_help.setDisable(false);
+                resetFields();
                 public_user_status_message_text_field.setFill(Color.DARKBLUE);
                 public_user_status_message_text_field.setText("You can now submit another request");
             });

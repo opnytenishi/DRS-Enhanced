@@ -200,6 +200,51 @@ public class Responder_page_Controller implements Initializable, IResponder {
         new_supplies_name.clear();
         shelter_details_from_responder_textbox.clear();
         notification_by_responder_textbox.clear();
+        
+        assign_teamComboBox.getSelectionModel().clearSelection();
+        assign_teamComboBox.setButtonCell(new ListCell<>() {
+            @Override
+            protected void updateItem(Department item, boolean empty) {
+                super.updateItem(item, empty);
+                setText(empty || item == null ? "Select team" : item.toString());
+            }
+        });
+        
+        select_supplies_list_combobox.getSelectionModel().clearSelection();
+        select_supplies_list_combobox.setButtonCell(new ListCell<>() {
+            @Override
+            protected void updateItem(Supply item, boolean empty) {
+                super.updateItem(item, empty);
+                setText(empty || item == null ? "Assign Supplies" : item.toString());
+            }
+        });
+        
+        select_shelter_region_from_responder_combobox.getSelectionModel().clearSelection();
+        select_shelter_region_from_responder_combobox.setButtonCell(new ListCell<>() {
+            @Override
+            protected void updateItem(Region item, boolean empty) {
+                super.updateItem(item, empty);
+                setText(empty || item == null ? "Select the Region" : item.toString());
+            }
+        });
+        
+        select_region_for_alerting_combobox.getSelectionModel().clearSelection();
+        select_region_for_alerting_combobox.setButtonCell(new ListCell<>() {
+            @Override
+            protected void updateItem(Region item, boolean empty) {
+                super.updateItem(item, empty);
+                setText(empty || item == null ? "Select the Region to send alert" : item.toString());
+            }
+        });
+        
+        remove_selected_region_from_alerting_combobox.getSelectionModel().clearSelection();
+        remove_selected_region_from_alerting_combobox.setButtonCell(new ListCell<>() {
+            @Override
+            protected void updateItem(Alert item, boolean empty) {
+                super.updateItem(item, empty);
+                setText(empty || item == null ? "Select the Region to remove from Alert mode" : item.toString());
+            }
+        });
     }
 
     @FXML

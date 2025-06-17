@@ -12,6 +12,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.control.ComboBox;
+import javafx.scene.control.ListCell;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
@@ -94,6 +95,24 @@ public class Login_and_signup_Controller implements Initializable, ILoginAndSign
         register_department_email.setText("");
         register_department_password.setText("");
         department_register_alert_message.setText("");
+        
+        login_user_type.getSelectionModel().clearSelection();
+        login_user_type.setButtonCell(new ListCell<>() {
+            @Override
+            protected void updateItem(UserType item, boolean empty) {
+                super.updateItem(item, empty);
+                setText(empty || item == null ? "Select user type" : item.toString());
+            }
+        });
+        
+        register_user_region.getSelectionModel().clearSelection();
+        register_user_region.setButtonCell(new ListCell<>() {
+            @Override
+            protected void updateItem(Region item, boolean empty) {
+                super.updateItem(item, empty);
+                setText(empty || item == null ? "Select the Region" : item.toString());
+            }
+        });
     }
 
     @FXML
