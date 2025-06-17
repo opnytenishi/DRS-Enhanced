@@ -1,8 +1,15 @@
 package com.drs.drs_enhanced.controller;
 
 import com.drs.drs_enhanced.App;
+import com.drs.drs_enhanced.backend.ClientSocketHelper;
+import com.drs.drs_enhanced.model.Department;
+import com.drs.drs_enhanced.model.Incident;
+import com.drs.drs_enhanced.model.Supply;
+import com.drs.drs_enhanced.model.User;
 import com.drs.drs_enhanced.view.IOtherDepartment;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.ResourceBundle;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -29,15 +36,42 @@ public class Other_Department_PageController implements Initializable, IOtherDep
     private TextArea supplies_details_textarea;
     @FXML
     private Button mark_as_completed_button;
-
+    
+    private User loggedInUser;
+    public void setLoggedInUser(User loggedInUser) {
+        this.loggedInUser = loggedInUser;
+        if (this.loggedInUser != null) {
+            loadAssignedIncidents();
+        }
+    }
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         department_status_message.setText("");
+  
+    }
 
-        // Load some fake data
-        assigned_task_textarea.setText("Assigned Task: Rescue Operation in East Region.\nTeam: Rescue Squad 7.");
-        incident_details_textarea.setText("Incident Details:\n- Flooding due to heavy rain\n- People stranded in buildings\n- Power lines down");
-        supplies_details_textarea.setText("Supplies:\n- 10 Life Jackets\n- 5 Rescue Boats\n- 20 First Aid Kits");
+    private void loadAssignedIncidents() {
+        Long deptId = ((Department) loggedInUser).getUserId();
+        Object response = ClientSocketHelper.sendRequest("getIncidentsForDepartment", deptId);
+
+        if (response instanceof List<?>) {
+            List<Incident> incidents = new ArrayList<>();
+
+            for (Object obj : (List<?>) response) {
+                if (obj instanceof Incident) {
+                    incidents.add((Incident) obj);
+                }
+            }
+
+            if (!incidents.isEmpty()) {
+                Incident firstIncident = incidents.get(0);
+                assigned_task_textarea.setText(firstIncident.getIncidentType());
+                incident_details_textarea.setText(firstIncident.getDescription());
+
+                List<Supply> supplies = ((Department) loggedInUser).getSupplies();
+                supplies_details_textarea.setText(supplies.toString());
+            }
+        }
     }
 
     @FXML
@@ -55,6 +89,7 @@ public class Other_Department_PageController implements Initializable, IOtherDep
     @Override
     public void handleLogoutFrom_department() {
         try {
+            setLoggedInUser(null);
             FXMLLoader loader = new FXMLLoader(
                     getClass().getResource("/com/drs/drs_enhanced/login_and_signup.fxml"));
             Parent root = loader.load();
@@ -67,6 +102,6 @@ public class Other_Department_PageController implements Initializable, IOtherDep
     @FXML
     @Override
     public void handleReload() {
-       // Add the load handlers here.
+        // Add the load handlers here.
     }
 }

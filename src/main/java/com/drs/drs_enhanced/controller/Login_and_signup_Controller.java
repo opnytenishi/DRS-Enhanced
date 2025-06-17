@@ -183,6 +183,8 @@ public class Login_and_signup_Controller implements Initializable, ILoginAndSign
                     case RESPONDER:
                         break;
                     case OTHER_DEPARTMENT:
+                        Other_Department_PageController controller1 = loader.getController();
+                        controller1.setLoggedInUser(loggedInUser);
                         break;
                     default:
                         break;
