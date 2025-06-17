@@ -16,6 +16,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.ResourceBundle;
+import java.util.stream.Collectors;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -133,6 +134,30 @@ public class Responder_page_Controller implements Initializable, IResponder {
         ObservableList<Department> departmentList = FXCollections.observableArrayList(departments);
         assign_teamComboBox.setItems(departmentList);
         activeTeamList_for_supplies.setItems(departmentList);
+        activeTeamList_for_supplies.setCellFactory(list -> new ListCell<>() {
+            @Override
+            protected void updateItem(Department dept, boolean empty) {
+                super.updateItem(dept, empty);
+                if (empty || dept == null) {
+                    setText(null);
+                } else {
+                    StringBuilder sb = new StringBuilder(dept.getDepartmentName());
+
+                    if (dept.getSupplies() != null && !dept.getSupplies().isEmpty()) {
+                        sb.append(" (");
+                        sb.append(
+                            dept.getSupplies().stream()
+                                .map(Supply::getName)
+                                .collect(Collectors.joining(", "))
+                        );
+                        sb.append(")");
+                    }
+
+                    setText(sb.toString());
+                }
+            }
+        });
+
     }
 
     private void loadSupplies() {
@@ -397,6 +422,8 @@ public class Responder_page_Controller implements Initializable, IResponder {
             success_or_error_status.setFill(Color.RED);
             success_or_error_status.setText("Please select both a team and a supply.");
         }
+        
+        loadDepartments();
     }
 
     @FXML

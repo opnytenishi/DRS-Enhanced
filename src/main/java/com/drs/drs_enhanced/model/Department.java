@@ -14,7 +14,7 @@ import java.util.List;
 @NamedQueries({
     @NamedQuery(
         name = "Department.findAll",
-        query = "SELECT d FROM Department d"
+        query = "SELECT DISTINCT d FROM Department d LEFT JOIN FETCH d.supplies"
     ),
     @NamedQuery(
     name = "Department.findWithSuppliesById",
