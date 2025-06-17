@@ -36,18 +36,20 @@ public class Other_Department_PageController implements Initializable, IOtherDep
     private TextArea supplies_details_textarea;
     @FXML
     private Button mark_as_completed_button;
-    
+
     private User loggedInUser;
+
     public void setLoggedInUser(User loggedInUser) {
         this.loggedInUser = loggedInUser;
         if (this.loggedInUser != null) {
             loadAssignedIncidents();
         }
     }
+
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         department_status_message.setText("");
-  
+
     }
 
     private void loadAssignedIncidents() {
@@ -68,9 +70,20 @@ public class Other_Department_PageController implements Initializable, IOtherDep
                 assigned_task_textarea.setText(firstIncident.getIncidentType());
                 incident_details_textarea.setText(firstIncident.getDescription());
 
-                List<Supply> supplies = ((Department) loggedInUser).getSupplies();
-                supplies_details_textarea.setText(supplies.toString());
+                
             }
+        }
+        response = ClientSocketHelper.sendRequest("getSuppliesForDepartment", deptId);
+
+        if (response instanceof List<?>) {
+            List<Supply> supplies = new ArrayList<>();
+            for (Object obj : (List<?>) response) {
+                if (obj instanceof Supply) {
+                    supplies.add((Supply)obj);
+                }
+            }
+
+            supplies_details_textarea.setText(supplies.toString());
         }
     }
 
