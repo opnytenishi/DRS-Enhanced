@@ -1,5 +1,6 @@
 package com.drs.drs_enhanced.model;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -19,9 +20,9 @@ import java.io.Serializable;
         query = "SELECT i FROM Incident i WHERE i.assignedDepartment IS NULL"
     ),
     @NamedQuery(
-    name = "Incident.findByDepartmentId",
-    query = "SELECT i FROM Incident i WHERE i.assignedDepartment.userId = :deptId"
-)
+        name = "Incident.findByDepartmentId",
+        query = "SELECT i FROM Incident i WHERE i.assignedDepartment.userId = :deptId AND i.completed = false"
+    )   
 })
 public class Incident implements Serializable {
     
@@ -32,6 +33,9 @@ public class Incident implements Serializable {
     private String incidentType;
     private String description;
     private int priorityLevel;
+    
+    @Column(nullable = false)
+    private boolean completed = false;
 
     @ManyToOne
     @JoinColumn(name = "user_id")
@@ -51,7 +55,7 @@ public class Incident implements Serializable {
         this.user = user;
         this.assignedDepartment = assignedDepartment;
     }
-
+    
     public Long getId() {
         return id;
     }
@@ -84,6 +88,14 @@ public class Incident implements Serializable {
         this.priorityLevel = priorityLevel;
     }
 
+    public boolean isCompleted() {
+        return completed;
+    }
+
+    public void setCompleted(boolean completed) {
+        this.completed = completed;
+    }
+    
     public User getUser() {
         return user;
     }
@@ -104,8 +116,8 @@ public class Incident implements Serializable {
     public String toString() {
         return "Incident{" + "id=" + id + ", incidentType=" + incidentType + 
                 ", description=" + description + ", priorityLevel=" + 
-                priorityLevel + ", user=" + user + ", assignedDepartment=" + 
-                assignedDepartment + '}';
+                priorityLevel + ", completed=" + completed + ", user=" + 
+                user + ", assignedDepartment=" + assignedDepartment + '}';
     }
-    
+
 }

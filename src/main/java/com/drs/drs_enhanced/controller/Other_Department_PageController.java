@@ -16,6 +16,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextArea;
+import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 
 public class Other_Department_PageController implements Initializable, IOtherDepartment {
@@ -34,6 +35,8 @@ public class Other_Department_PageController implements Initializable, IOtherDep
     private Button previous_button;
     @FXML
     private Button next_button;
+    @FXML
+    private Button mark_as_completed_button;
 
     private User loggedInUser;
 
@@ -92,6 +95,11 @@ public class Other_Department_PageController implements Initializable, IOtherDep
 
     private void displayIncident(int index) {
         if (assignedIncidents.isEmpty()) {
+            assigned_task_textarea.setText("No incidents assigned.");
+            incident_details_textarea.setText("");
+            mark_as_completed_button.setDisable(true);
+            previous_button.setDisable(true);
+            next_button.setDisable(true);
             return;
         }
 
@@ -101,6 +109,8 @@ public class Other_Department_PageController implements Initializable, IOtherDep
         incident_details_textarea.setText(incident.getDescription());
         previous_button.setDisable(currentIncidentIndex == 0);
         next_button.setDisable(currentIncidentIndex == assignedIncidents.size() - 1);
+        
+        mark_as_completed_button.setDisable(false);
     }
 
     @FXML
@@ -120,16 +130,35 @@ public class Other_Department_PageController implements Initializable, IOtherDep
             displayIncident(currentIncidentIndex);
         }
     }
-
+    
     @FXML
     @Override
     public void handleMarkAsCompleted() {
-        department_status_message.setText("✔ Marked as Completed. Thank you!");
+        if (assignedIncidents.isEmpty()) {
+            return;
+        }
 
-        // Clear all fields after marking as completed
-        assigned_task_textarea.clear();
-        incident_details_textarea.clear();
-        supplies_details_textarea.clear();
+        Incident incident = assignedIncidents.get(currentIncidentIndex);
+
+        boolean success = false;
+        Object response = ClientSocketHelper.sendRequest("markIncidentComplete", incident.getId());
+        if (response instanceof Boolean && (Boolean) response) {
+            success = true;
+        }
+
+        if (success) {
+            department_status_message.setFill(Color.GREEN);
+            department_status_message.setText("✔ Marked as Completed. Thank you!");
+            
+            assignedIncidents.remove(currentIncidentIndex);
+            if (currentIncidentIndex > assignedIncidents.size()) {
+                handleNextIncident();
+            } else {
+                handlePreviousIncident();
+            }
+        } else {
+            System.out.println("Failed to mark incident as complete");
+        }
     }
 
     @FXML
