@@ -46,6 +46,8 @@ public class Other_Department_PageController implements Initializable, IOtherDep
         if (this.loggedInUser != null) {
             loadAssignedIncidents();
             displaySupplies();
+            
+            this.department_name.setText(this.loggedInUser.getName() + " Dashboard");
         }
     }
 
