@@ -18,7 +18,7 @@ import java.util.List;
     ),
     @NamedQuery(
     name = "Department.findWithSuppliesById",
-    query = "SELECT d FROM Department d LEFT JOIN FETCH d.supplies WHERE d.user"
+    query = "SELECT d FROM Department d LEFT JOIN FETCH d.supplies WHERE d.userId = :deptId"
     )
 })
 public class Department extends User{
