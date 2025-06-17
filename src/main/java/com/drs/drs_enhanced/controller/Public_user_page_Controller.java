@@ -31,30 +31,26 @@ public class Public_user_page_Controller implements Initializable, IPublicUser {
 
     @FXML
     private Text alert_safe_danger;
-
     @FXML
     private ComboBox<IncidentType> public_user_incident_type;
-
     @FXML
     private TextArea public_user_description;
-
     @FXML
     private Button public_user_request_help;
-
-    @FXML
-    private Button reload_button;
-
     @FXML
     private ListView<Shelter> shelter_list;
-
     @FXML
     private ListView<Notification> public_notifications_list;
-
     @FXML
     private Text public_user_status_message_text_field;
 
     private User loggedInUser;
 
+    /**
+     * Sets the logged-in user for the current controller context.
+     *
+     * @param loggedInUser the authenticated user object injected from the login
+     */
     @Override
     public void setLoggedInUser(User loggedInUser) {
         this.loggedInUser = loggedInUser;
@@ -64,16 +60,22 @@ public class Public_user_page_Controller implements Initializable, IPublicUser {
         }
     }
 
+    /**
+     * Initializes the controller class.
+     *
+     * @param url
+     * @param rb
+     */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-
-        // Incident types dropdown
         public_user_status_message_text_field.setText("");
-
         public_user_incident_type.getItems().setAll(IncidentType.values());
         loadNotifications();
     }
-    
+
+    /**
+     * Resets all fields.
+     */
     @Override
     public void resetFields() {
         public_user_description.setText("");
@@ -87,6 +89,9 @@ public class Public_user_page_Controller implements Initializable, IPublicUser {
         });
     }
 
+    /**
+     * Loads all shelters related to the currently logged-in user's region.
+     */
     private void loadShelters() {
         Object response = ClientSocketHelper.sendRequest("getAllShelters", loggedInUser.getRegion());
 
@@ -104,6 +109,9 @@ public class Public_user_page_Controller implements Initializable, IPublicUser {
         shelter_list.setItems(shelterList);
     }
 
+    /**
+     * Loads all notifications published.
+     */
     private void loadNotifications() {
         Object response = ClientSocketHelper.sendRequest("getAllNotifications", null);
 
@@ -121,6 +129,9 @@ public class Public_user_page_Controller implements Initializable, IPublicUser {
         public_notifications_list.setItems(notificationList);
     }
 
+    /**
+     * Loads all alerts related to the currently logged-in user's region.
+     */
     private void loadAlertByRegion() {
         Object response = ClientSocketHelper.sendRequest("regionAlert", loggedInUser.getRegion());
         if (response instanceof Boolean) {
@@ -135,6 +146,10 @@ public class Public_user_page_Controller implements Initializable, IPublicUser {
         }
     }
 
+    /**
+     * Handles the request submission by a public user Disables re-submission
+     * for a period.
+     */
     @FXML
     @Override
     public void handleRequestHelpButtonClick() {
@@ -146,8 +161,8 @@ public class Public_user_page_Controller implements Initializable, IPublicUser {
             public_user_status_message_text_field.setText("Please fill all details");
         } else {
 
-            Incident incident = new Incident(selectedIncident.toString(), 
-                    description, selectedIncident.getPriority(), 
+            Incident incident = new Incident(selectedIncident.toString(),
+                    description, selectedIncident.getPriority(),
                     loggedInUser, null);
             Object response = ClientSocketHelper.sendRequest("sendHelp", incident);
 
@@ -184,6 +199,9 @@ public class Public_user_page_Controller implements Initializable, IPublicUser {
         }
     }
 
+    /**
+     * Reloads all data from db for the logged-in public user.
+     */
     @FXML
     @Override
     public void handleReload() {
@@ -192,6 +210,9 @@ public class Public_user_page_Controller implements Initializable, IPublicUser {
         loadNotifications();
     }
 
+    /**
+     * Logs out the current public user and redirects to the login screen.
+     */
     @FXML
     @Override
     public void handleLogoutFrom_public_user() {

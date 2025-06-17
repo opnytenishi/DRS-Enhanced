@@ -13,30 +13,32 @@ import java.util.List;
 @Table(name = "departments")
 @NamedQueries({
     @NamedQuery(
-        name = "Department.findAll",
-        query = "SELECT DISTINCT d FROM Department d LEFT JOIN FETCH d.supplies"
+            name = "Department.findAll",
+            query = "SELECT DISTINCT d FROM Department d LEFT JOIN FETCH d.supplies"
     ),
     @NamedQuery(
-    name = "Department.findWithSuppliesById",
-    query = "SELECT d FROM Department d LEFT JOIN FETCH d.supplies WHERE d.userId = :deptId"
+            name = "Department.findWithSuppliesById",
+            query = "SELECT d FROM Department d LEFT JOIN FETCH d.supplies WHERE d.userId = :deptId"
     )
 })
-public class Department extends User{
+public class Department extends User {
+
+    private static final long serialVersionUID = 1L;
 
     private String departmentName;
-    
+
     @ManyToMany
     @JoinTable(
-        name = "department_supply",
-        joinColumns = @JoinColumn(name = "department_id"),
-        inverseJoinColumns = @JoinColumn(name = "supply_id")
+            name = "department_supply",
+            joinColumns = @JoinColumn(name = "department_id"),
+            inverseJoinColumns = @JoinColumn(name = "supply_id")
     )
     private List<Supply> supplies;
-    
+
     public Department() {
     }
 
-    public Department(String departmentName, List<Supply> supplies, String name, String email, String password,String region) {
+    public Department(String departmentName, List<Supply> supplies, String name, String email, String password, String region) {
         super(name, email, password, region);
         this.departmentName = departmentName;
         this.supplies = supplies;
@@ -62,5 +64,5 @@ public class Department extends User{
     public String toString() {
         return getDepartmentName();
     }
-    
+
 }

@@ -5,7 +5,9 @@ import jakarta.persistence.Table;
 
 @Entity
 @Table(name = "responders")
-public class Responder extends User{
+public class Responder extends User {
+
+    private static final long serialVersionUID = 1L;
 
     public Responder() {
     }
@@ -13,5 +15,5 @@ public class Responder extends User{
     public Responder(String name, String email, String password, String region) {
         super(name, email, password, region);
     }
-    
+
 }

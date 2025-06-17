@@ -7,7 +7,6 @@ public enum Region {
     WEST("West"),
     CENTRAL("Central");
 
-    
     private final String displayName;
 
     private Region(String displayName) {

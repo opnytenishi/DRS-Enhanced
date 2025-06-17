@@ -20,6 +20,8 @@ import java.io.Serializable;
 })
 public class Shelter implements Serializable {
 
+    private static final long serialVersionUID = 1L;
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -61,8 +63,7 @@ public class Shelter implements Serializable {
 
     @Override
     public String toString() {
-        return getShelterDetail() ;
+        return getShelterDetail();
     }
 
-    
 }

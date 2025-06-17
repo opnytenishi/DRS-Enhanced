@@ -43,41 +43,55 @@ public class Other_Department_PageController implements Initializable, IOtherDep
     private List<Incident> assignedIncidents = new ArrayList<>();
     private int currentIncidentIndex = 0;
 
+    /**
+     * Sets the logged-in user for the current controller context.
+     *
+     * @param loggedInUser the authenticated user object injected from the login
+     */
     @Override
     public void setLoggedInUser(User loggedInUser) {
         this.loggedInUser = loggedInUser;
         if (this.loggedInUser != null) {
             loadAssignedIncidents();
             displaySupplies();
-            
+
             this.department_name.setText(this.loggedInUser.getName() + " Dashboard");
         }
     }
 
+    /**
+     * Initializes the controller class.
+     *
+     * @param url
+     * @param rb
+     */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         department_status_message.setText("");
-
     }
 
+    /**
+     * Loads all incidents assigned to the currently logged-in department user.
+     */
     private void loadAssignedIncidents() {
         Object response = ClientSocketHelper.sendRequest("getIncidentsForDepartment", loggedInUser.getUserId());
 
         if (response instanceof List<?>) {
             assignedIncidents.clear();
-
             for (Object obj : (List<?>) response) {
                 if (obj instanceof Incident) {
                     assignedIncidents.add((Incident) obj);
                 }
             }
-
             currentIncidentIndex = 0;
             displayIncident(currentIncidentIndex);
         }
 
     }
 
+    /**
+     * Loads all supplies assigned to the currently logged-in department user.
+     */
     private void displaySupplies() {
         Object response = ClientSocketHelper.sendRequest("getSuppliesForDepartment", loggedInUser.getUserId());
 
@@ -88,11 +102,16 @@ public class Other_Department_PageController implements Initializable, IOtherDep
                     supplies += ((Supply) obj).getName() + "\n";
                 }
             }
-
             supplies_details_textarea.setText(supplies);
         }
     }
 
+    /**
+     * Displays the incident at the specified index from the assigned incident
+     * list.
+     *
+     * @param index the position of the incident to display
+     */
     private void displayIncident(int index) {
         if (assignedIncidents.isEmpty()) {
             assigned_task_textarea.setText("No incidents assigned.");
@@ -109,10 +128,13 @@ public class Other_Department_PageController implements Initializable, IOtherDep
         incident_details_textarea.setText(incident.getDescription());
         previous_button.setDisable(currentIncidentIndex == 0);
         next_button.setDisable(currentIncidentIndex == assignedIncidents.size() - 1);
-        
+
         mark_as_completed_button.setDisable(false);
     }
 
+    /**
+     * Handles the action of showing the next incident in the assigned list.
+     */
     @FXML
     @Override
     public void handleNextIncident() {
@@ -122,6 +144,9 @@ public class Other_Department_PageController implements Initializable, IOtherDep
         }
     }
 
+    /**
+     * Handles the action of showing the previous incident in the assigned list.
+     */
     @FXML
     @Override
     public void handlePreviousIncident() {
@@ -130,7 +155,11 @@ public class Other_Department_PageController implements Initializable, IOtherDep
             displayIncident(currentIncidentIndex);
         }
     }
-    
+
+    /**
+     * Handles marking the currently displayed incident as completed Updates the
+     * UI.
+     */
     @FXML
     @Override
     public void handleMarkAsCompleted() {
@@ -149,7 +178,7 @@ public class Other_Department_PageController implements Initializable, IOtherDep
         if (success) {
             department_status_message.setFill(Color.GREEN);
             department_status_message.setText("✔ Marked as Completed. Thank you!");
-            
+
             assignedIncidents.remove(currentIncidentIndex);
             if (currentIncidentIndex > assignedIncidents.size()) {
                 handleNextIncident();
@@ -161,6 +190,9 @@ public class Other_Department_PageController implements Initializable, IOtherDep
         }
     }
 
+    /**
+     * Logs out the current department user and redirects to the login screen.
+     */
     @FXML
     @Override
     public void handleLogoutFrom_department() {
@@ -175,6 +207,10 @@ public class Other_Department_PageController implements Initializable, IOtherDep
         }
     }
 
+    /**
+     * Reloads the assigned incidents and supplies for the logged-in department
+     * user.
+     */
     @FXML
     @Override
     public void handleReload() {

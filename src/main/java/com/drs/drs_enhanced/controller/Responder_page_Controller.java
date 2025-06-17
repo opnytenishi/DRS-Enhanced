@@ -37,36 +37,35 @@ public class Responder_page_Controller implements Initializable, IResponder {
 
     @FXML
     private Text success_or_error_status;
-
     @FXML
     private ListView<Incident> incidentList_for_assign_team;
     @FXML
     private ComboBox<Department> assign_teamComboBox;
-
     @FXML
     private ListView<Department> activeTeamList_for_supplies;
-
     @FXML
     private TextField new_supplies_name;
     @FXML
     private ComboBox<Supply> select_supplies_list_combobox;
-
     @FXML
     private TextArea shelter_details_from_responder_textbox;
     @FXML
     private ComboBox<Region> select_shelter_region_from_responder_combobox;
-
     @FXML
     private TextArea notification_by_responder_textbox;
-
     @FXML
     private ComboBox<Region> select_region_for_alerting_combobox;
     @FXML
     private ComboBox<Alert> remove_selected_region_from_alerting_combobox;
-
     @FXML
     private TabPane tabPane;
 
+    /**
+     * Initializes the controller class.
+     *
+     * @param url
+     * @param rb
+     */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         success_or_error_status.setText("");
@@ -75,20 +74,23 @@ public class Responder_page_Controller implements Initializable, IResponder {
         loadDepartments();
         loadSupplies();
         loadAlerts();
-        // Populate regions into ComboBoxes
+
         select_region_for_alerting_combobox.getItems().addAll(Region.values());
         select_shelter_region_from_responder_combobox.getItems().addAll(Region.values());
 
         for (Tab tab : tabPane.getTabs()) {
             tab.setOnSelectionChanged(event -> {
                 if (tab.isSelected()) {
-                    resetFields();  // Reset inputs when a tab is selected
+                    resetFields();
                 }
             });
         }
 
     }
 
+    /**
+     * Loads all incidents that are not assigned to any departments.
+     */
     private void loadIncidents() {
         Object response = ClientSocketHelper.sendRequest("getUnassignedIncidents", null);
         List<Incident> incidents = new ArrayList<>();
@@ -101,7 +103,9 @@ public class Responder_page_Controller implements Initializable, IResponder {
             }
         }
 
+        // priority based sorting 
         incidents.sort(Comparator.comparingInt(Incident::getPriorityLevel));
+
         ObservableList<Incident> observableIncidents = FXCollections.observableArrayList(incidents);
         incidentList_for_assign_team.setItems(observableIncidents);
         incidentList_for_assign_team.setCellFactory(list -> new ListCell<>() {
@@ -118,6 +122,9 @@ public class Responder_page_Controller implements Initializable, IResponder {
         });
     }
 
+    /**
+     * Loads all departments added.
+     */
     private void loadDepartments() {
         Object response = ClientSocketHelper.sendRequest("getAllDepartments", null);
 
@@ -146,9 +153,9 @@ public class Responder_page_Controller implements Initializable, IResponder {
                     if (dept.getSupplies() != null && !dept.getSupplies().isEmpty()) {
                         sb.append(" (");
                         sb.append(
-                            dept.getSupplies().stream()
-                                .map(Supply::getName)
-                                .collect(Collectors.joining(", "))
+                                dept.getSupplies().stream()
+                                        .map(Supply::getName)
+                                        .collect(Collectors.joining(", "))
                         );
                         sb.append(")");
                     }
@@ -160,6 +167,9 @@ public class Responder_page_Controller implements Initializable, IResponder {
 
     }
 
+    /**
+     * Loads all supplies created.
+     */
     private void loadSupplies() {
         Object response = ClientSocketHelper.sendRequest("getAllSupplies", null);
 
@@ -177,6 +187,9 @@ public class Responder_page_Controller implements Initializable, IResponder {
         select_supplies_list_combobox.setItems(suppliesList);
     }
 
+    /**
+     * Loads all alerts created.
+     */
     private void loadAlerts() {
         Object response = ClientSocketHelper.sendRequest("getAllAlerts", null);
 
@@ -194,13 +207,16 @@ public class Responder_page_Controller implements Initializable, IResponder {
         remove_selected_region_from_alerting_combobox.setItems(alertList);
     }
 
+    /**
+     * Resets all fields.
+     */
     @Override
     public void resetFields() {
         success_or_error_status.setText("");
         new_supplies_name.clear();
         shelter_details_from_responder_textbox.clear();
         notification_by_responder_textbox.clear();
-        
+
         assign_teamComboBox.getSelectionModel().clearSelection();
         assign_teamComboBox.setButtonCell(new ListCell<>() {
             @Override
@@ -209,7 +225,7 @@ public class Responder_page_Controller implements Initializable, IResponder {
                 setText(empty || item == null ? "Select team" : item.toString());
             }
         });
-        
+
         select_supplies_list_combobox.getSelectionModel().clearSelection();
         select_supplies_list_combobox.setButtonCell(new ListCell<>() {
             @Override
@@ -218,7 +234,7 @@ public class Responder_page_Controller implements Initializable, IResponder {
                 setText(empty || item == null ? "Assign Supplies" : item.toString());
             }
         });
-        
+
         select_shelter_region_from_responder_combobox.getSelectionModel().clearSelection();
         select_shelter_region_from_responder_combobox.setButtonCell(new ListCell<>() {
             @Override
@@ -227,7 +243,7 @@ public class Responder_page_Controller implements Initializable, IResponder {
                 setText(empty || item == null ? "Select the Region" : item.toString());
             }
         });
-        
+
         select_region_for_alerting_combobox.getSelectionModel().clearSelection();
         select_region_for_alerting_combobox.setButtonCell(new ListCell<>() {
             @Override
@@ -236,7 +252,7 @@ public class Responder_page_Controller implements Initializable, IResponder {
                 setText(empty || item == null ? "Select the Region to send alert" : item.toString());
             }
         });
-        
+
         remove_selected_region_from_alerting_combobox.getSelectionModel().clearSelection();
         remove_selected_region_from_alerting_combobox.setButtonCell(new ListCell<>() {
             @Override
@@ -247,6 +263,9 @@ public class Responder_page_Controller implements Initializable, IResponder {
         });
     }
 
+    /**
+     * Logs out the current responder user and redirects to the login screen.
+     */
     @FXML
     @Override
     public void handleLogoutFrom_responder() {
@@ -260,6 +279,9 @@ public class Responder_page_Controller implements Initializable, IResponder {
         }
     }
 
+    /**
+     * Handles the process of assigning a department to reported incident.
+     */
     @FXML
     @Override
     public void handleAssignTeamToIncident() {
@@ -287,6 +309,9 @@ public class Responder_page_Controller implements Initializable, IResponder {
 
     }
 
+    /**
+     * Adds a new supply.
+     */
     @FXML
     @Override
     public void handleAddNewSupply() {
@@ -318,6 +343,9 @@ public class Responder_page_Controller implements Initializable, IResponder {
         new_supplies_name.clear();
     }
 
+    /**
+     * Handles the adding a nearby shelter for region.
+     */
     @FXML
     @Override
     public void handleSendNearbyShelter() {
@@ -356,6 +384,9 @@ public class Responder_page_Controller implements Initializable, IResponder {
 
     }
 
+    /**
+     * Creates Notifications.
+     */
     @FXML
     @Override
     public void handleSendNotification() {
@@ -386,6 +417,9 @@ public class Responder_page_Controller implements Initializable, IResponder {
         notification_by_responder_textbox.clear();
     }
 
+    /**
+     * Handles the process of creating alerts for regions.
+     */
     @FXML
     @Override
     public void handleSendAlertToRegion() {
@@ -417,6 +451,9 @@ public class Responder_page_Controller implements Initializable, IResponder {
         }
     }
 
+    /**
+     * Handles the process of deleting alerts for regions.
+     */
     @FXML
     @Override
     public void handleRemoveAlertFromRegion() {
@@ -438,6 +475,9 @@ public class Responder_page_Controller implements Initializable, IResponder {
         }
     }
 
+    /**
+     * Handles the process of assigning a supplies to departments.
+     */
     @FXML
     @Override
     public void handleassign_supplies() {
@@ -467,10 +507,13 @@ public class Responder_page_Controller implements Initializable, IResponder {
             success_or_error_status.setFill(Color.RED);
             success_or_error_status.setText("Please select both a team and a supply.");
         }
-        
+
         loadDepartments();
     }
 
+    /**
+     * Reloads all data from db for the logged-in responder user.
+     */
     @FXML
     @Override
     public void handleReload() {

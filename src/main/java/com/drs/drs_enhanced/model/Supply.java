@@ -16,22 +16,24 @@ import java.util.List;
 @Table(name = "supplies")
 @NamedQueries({
     @NamedQuery(
-        name = "Supply.findAll",
-        query = "SELECT s FROM Supply s"
+            name = "Supply.findAll",
+            query = "SELECT s FROM Supply s"
     )
 })
-public class Supply implements Serializable{
+public class Supply implements Serializable {
+
+    private static final long serialVersionUID = 1L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    
+
     @Column(nullable = false, unique = true)
     private String name;
 
     @ManyToMany(mappedBy = "supplies")
     private List<Department> departments;
-    
+
     public Supply() {
     }
 

@@ -17,12 +17,12 @@ import java.io.Serializable;
 @Inheritance(strategy = InheritanceType.JOINED)
 @NamedQueries({
     @NamedQuery(
-        name = "User.findByEmail",
-        query = "SELECT user FROM User user WHERE user.email = :email"
+            name = "User.findByEmail",
+            query = "SELECT user FROM User user WHERE user.email = :email"
     ),
     @NamedQuery(
-    name = "User.login",
-    query = "SELECT user FROM User user WHERE user.email = :email AND user.password = :password"
+            name = "User.login",
+            query = "SELECT user FROM User user WHERE user.email = :email AND user.password = :password"
     )
 })
 public class User implements Serializable {
@@ -35,13 +35,13 @@ public class User implements Serializable {
 
     @Column(nullable = false)
     private String name;
-    
+
     @Column(nullable = false, unique = true)
     private String email;
-    
+
     @Column(nullable = false)
     private String password;
-    
+
     @Column(nullable = false)
     private String region;
 
@@ -97,8 +97,8 @@ public class User implements Serializable {
 
     @Override
     public String toString() {
-        return "User{" + "userId=" + userId + ", name=" + name + ", email=" + 
-                email + ", password=" + password + ", region=" + region + '}';
+        return "User{" + "userId=" + userId + ", name=" + name + ", email="
+                + email + ", password=" + password + ", region=" + region + '}';
     }
- 
+
 }

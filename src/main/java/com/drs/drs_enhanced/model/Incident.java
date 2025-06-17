@@ -16,16 +16,18 @@ import java.io.Serializable;
 @Table(name = "incidents")
 @NamedQueries({
     @NamedQuery(
-        name = "Incident.findUnassigned",
-        query = "SELECT i FROM Incident i WHERE i.assignedDepartment IS NULL"
+            name = "Incident.findUnassigned",
+            query = "SELECT i FROM Incident i WHERE i.assignedDepartment IS NULL"
     ),
     @NamedQuery(
-        name = "Incident.findByDepartmentId",
-        query = "SELECT i FROM Incident i WHERE i.assignedDepartment.userId = :deptId AND i.completed = false"
-    )   
+            name = "Incident.findByDepartmentId",
+            query = "SELECT i FROM Incident i WHERE i.assignedDepartment.userId = :deptId AND i.completed = false"
+    )
 })
 public class Incident implements Serializable {
-    
+
+    private static final long serialVersionUID = 1L;
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -33,13 +35,13 @@ public class Incident implements Serializable {
     private String incidentType;
     private String description;
     private int priorityLevel;
-    
+
     @Column(nullable = false)
     private boolean completed = false;
 
     @ManyToOne
     @JoinColumn(name = "user_id")
-    private User user;  
+    private User user;
 
     @ManyToOne
     @JoinColumn(name = "department_id")
@@ -55,7 +57,7 @@ public class Incident implements Serializable {
         this.user = user;
         this.assignedDepartment = assignedDepartment;
     }
-    
+
     public Long getId() {
         return id;
     }
@@ -95,7 +97,7 @@ public class Incident implements Serializable {
     public void setCompleted(boolean completed) {
         this.completed = completed;
     }
-    
+
     public User getUser() {
         return user;
     }
@@ -114,10 +116,10 @@ public class Incident implements Serializable {
 
     @Override
     public String toString() {
-        return "Incident{" + "id=" + id + ", incidentType=" + incidentType + 
-                ", description=" + description + ", priorityLevel=" + 
-                priorityLevel + ", completed=" + completed + ", user=" + 
-                user + ", assignedDepartment=" + assignedDepartment + '}';
+        return "Incident{" + "id=" + id + ", incidentType=" + incidentType
+                + ", description=" + description + ", priorityLevel="
+                + priorityLevel + ", completed=" + completed + ", user="
+                + user + ", assignedDepartment=" + assignedDepartment + '}';
     }
 
 }

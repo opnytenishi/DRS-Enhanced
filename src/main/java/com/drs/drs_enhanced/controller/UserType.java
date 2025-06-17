@@ -5,7 +5,6 @@ public enum UserType {
     RESPONDER("Responder"), 
     OTHER_DEPARTMENT("Other Department");
 
-    
     private final String displayName;
 
     UserType(String displayName) {

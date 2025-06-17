@@ -5,11 +5,12 @@ import java.io.Serializable;
 public class Request implements Serializable {
 
     private static final long serialVersionUID = 1L;
-    
+
     private String action;
     private Object data;
 
-    public Request() {}
+    public Request() {
+    }
 
     public Request(String action, Object data) {
         this.action = action;
@@ -34,9 +35,9 @@ public class Request implements Serializable {
 
     @Override
     public String toString() {
-        return "Request{" +
-                "action='" + action + '\'' +
-                ", data=" + data +
-                '}';
+        return "Request{"
+                + "action='" + action + '\''
+                + ", data=" + data
+                + '}';
     }
 }

@@ -95,7 +95,7 @@ public class Login_and_signup_Controller implements Initializable, ILoginAndSign
         register_department_email.setText("");
         register_department_password.setText("");
         department_register_alert_message.setText("");
-        
+
         login_user_type.getSelectionModel().clearSelection();
         login_user_type.setButtonCell(new ListCell<>() {
             @Override
@@ -104,7 +104,7 @@ public class Login_and_signup_Controller implements Initializable, ILoginAndSign
                 setText(empty || item == null ? "Select user type" : item.toString());
             }
         });
-        
+
         register_user_region.getSelectionModel().clearSelection();
         register_user_region.setButtonCell(new ListCell<>() {
             @Override
@@ -115,11 +115,15 @@ public class Login_and_signup_Controller implements Initializable, ILoginAndSign
         });
     }
 
+    /**
+     * Handles the login process for users based on their selected role.
+     */
     @FXML
     @Override
     public void handleUserLogin() {
         UserType selectedUserType = login_user_type.getValue();
 
+        // Validates input fields
         if (selectedUserType == null) {
             login_alert_message.setText("Please select a user type.");
             return;
@@ -130,9 +134,9 @@ public class Login_and_signup_Controller implements Initializable, ILoginAndSign
         }
 
         String fxmlFile = null;
-
         User loginUser;
 
+        // Creates the appropriate user object and FXML path
         switch (selectedUserType) {
             case PUBLIC_USER:
                 fxmlFile = "public_user_page.fxml";
@@ -155,12 +159,12 @@ public class Login_and_signup_Controller implements Initializable, ILoginAndSign
         loginUser.setEmail(login_email.getText().trim());
         loginUser.setPassword(login_password.getText().trim());
 
+        // Sends a login request to the server
         Object response = ClientSocketHelper.sendRequest("login", loginUser);
 
         if (response instanceof User) {
 
             User loggedInUser = (User) response;
-
             boolean valid = false;
 
             switch (selectedUserType) {
@@ -187,6 +191,7 @@ public class Login_and_signup_Controller implements Initializable, ILoginAndSign
                         getClass().getResource("/com/drs/drs_enhanced/" + fxmlFile));
                 Parent root = loader.load();
 
+                // injects the logged-in user to controller
                 switch (selectedUserType) {
                     case PUBLIC_USER:
                         Public_user_page_Controller controller = loader.getController();
@@ -213,6 +218,9 @@ public class Login_and_signup_Controller implements Initializable, ILoginAndSign
 
     }
 
+    /**
+     * Handles the registration process for a public user.
+     */
     @FXML
     @Override
     public void registerUser() {
@@ -246,6 +254,9 @@ public class Login_and_signup_Controller implements Initializable, ILoginAndSign
         }
     }
 
+    /**
+     * Handles the registration process for a department user.
+     */
     @FXML
     @Override
     public void registerOtherDepartmentUser() {
