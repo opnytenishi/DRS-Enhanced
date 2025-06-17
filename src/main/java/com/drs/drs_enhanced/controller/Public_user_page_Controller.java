@@ -32,7 +32,7 @@ public class Public_user_page_Controller implements Initializable, IPublicUser {
     private Text alert_safe_danger;
 
     @FXML
-    private ComboBox<String> public_user_incident_type;
+    private ComboBox<IncidentType> public_user_incident_type;
 
     @FXML
     private TextArea public_user_description;
@@ -68,17 +68,7 @@ public class Public_user_page_Controller implements Initializable, IPublicUser {
         // Incident types dropdown
         public_user_status_message_text_field.setText("");
 
-        ObservableList<String> incidentTypes = FXCollections.observableArrayList(
-                "Flood",
-                "Earthquake",
-                "Fire",
-                "Cyclone",
-                "Medical Emergency",
-                "Missing Person",
-                "Accident",
-                "Landslide"
-        );
-        public_user_incident_type.setItems(incidentTypes);
+        public_user_incident_type.getItems().setAll(IncidentType.values());
         loadNotifications();
     }
 
@@ -133,15 +123,17 @@ public class Public_user_page_Controller implements Initializable, IPublicUser {
     @FXML
     @Override
     public void handleRequestHelpButtonClick() {
-        String selectedIncident = public_user_incident_type.getValue();
+        IncidentType selectedIncident = public_user_incident_type.getValue();
         String description = public_user_description.getText().trim();
 
-        if (selectedIncident == null || selectedIncident.isEmpty() || description.isEmpty()) {
+        if (selectedIncident == null || description.isEmpty()) {
             public_user_status_message_text_field.setFill(Color.RED);
             public_user_status_message_text_field.setText("Please fill all details");
         } else {
 
-            Incident incident = new Incident(selectedIncident, description, 0, loggedInUser, null);
+            Incident incident = new Incident(selectedIncident.toString(), 
+                    description, selectedIncident.getPriority(), 
+                    loggedInUser, null);
             Object response = ClientSocketHelper.sendRequest("sendHelp", incident);
 
             if (response instanceof Boolean) {

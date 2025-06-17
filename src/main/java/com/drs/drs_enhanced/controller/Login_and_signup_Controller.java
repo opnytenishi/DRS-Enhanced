@@ -150,7 +150,6 @@ public class Login_and_signup_Controller implements Initializable, ILoginAndSign
                     break;
                 case RESPONDER:
                     valid = loggedInUser instanceof Responder;
-                    ;
                     break;
                 case OTHER_DEPARTMENT:
                     valid = loggedInUser instanceof Department;

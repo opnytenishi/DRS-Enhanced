@@ -11,6 +11,7 @@ import com.drs.drs_enhanced.model.Supply;
 import com.drs.drs_enhanced.view.IResponder;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -99,6 +100,7 @@ public class Responder_page_Controller implements Initializable, IResponder {
             }
         }
 
+        incidents.sort(Comparator.comparingInt(Incident::getPriorityLevel));
         ObservableList<Incident> observableIncidents = FXCollections.observableArrayList(incidents);
         incidentList_for_assign_team.setItems(observableIncidents);
         incidentList_for_assign_team.setCellFactory(list -> new ListCell<>() {
@@ -113,7 +115,6 @@ public class Responder_page_Controller implements Initializable, IResponder {
                 }
             }
         });
-
     }
 
     private void loadDepartments() {
